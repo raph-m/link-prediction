@@ -1,0 +1,32 @@
+Lien vers kaggle: https://www.kaggle.com/t/012200c0318541f6806bfe757092b4f0
+Il faut citer des papiers si possible.
+
+Il faudrait faire un plan d'attaque.
+D'abord tester des choses très simples pour avoir des premiers résultats et une idée de la puissance de calcul nécessaire.
+
+Le modèle "baseline" prend en compte seulement quelques features et les entraîne dans un SVM:
+- number of overlapping words in paper titles
+- number of common authors
+- difference in publication years
+
+brainstorming sur les features:
+- mots les plus importants d'après TF-IDF dans le titre et dans l'abstract
+- biensûr les dates
+- un genre d'historique de citation des auteurs. Par exemple les 10 auteurs les plus cités par les auteurs du texte
+- représentation word2vec des abstracts ?
+- représentations sous formes de graphes des textes et essayer d'en extraire des features
+
+
+à faire:
+relire les cours pour trouver tout ce qui pourrait nous servir.
+
+brainstorming data exploration:
+- nombre d'auteurs différents
+- nombre d'apparitions d'un auteur dans la base de donnée
+- distribution du nombre d'overlapping words chez les textes qui ne se citent pas et chez les textes qui se citent
+
+
+brainstorming recherche d'articles:
+- checker dans les cours les articles qui sont cités
+- faire des recherches en ligne
+- demander à des gens ?
