@@ -8,7 +8,7 @@ from tools import lit_eval_nan_proof
 tqdm.pandas(tqdm())
 
 # path
-path_to_data = "../data/"
+path_to_data = "../../data/"
 
 # loading preprocessed data
 converter_dict = {'authors': lit_eval_nan_proof, 'journal': lit_eval_nan_proof,

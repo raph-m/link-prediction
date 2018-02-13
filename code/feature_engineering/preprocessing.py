@@ -7,7 +7,7 @@ from tqdm import tqdm
 tqdm.pandas(tqdm())
 
 # path
-path_to_data = "../data/"
+path_to_data = "../../data/"
 
 # preprocessing tools
 nltk.download('punkt') # for tokenization

@@ -4,7 +4,7 @@ from sklearn.metrics import accuracy_score
 import pandas as pd
 
 # path
-path_to_data = "../data/"
+path_to_data = "../../data/"
 
 # load data
 training = pd.read_csv(path_to_data + "training_features.txt")
