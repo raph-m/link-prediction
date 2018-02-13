@@ -12,7 +12,7 @@ Le modèle "baseline" prend en compte seulement quelques features et les entraî
 Il faudrait créer ces features et ajouter quelques features au fur et à mesure.
 
 brainstorming sur les features:
-- mots les plus importants d'après TF-IDF dans le titre et dans l'abstract: check. voir comment on fait exactement
+- mots les plus importants d'après TF-IDF dans le titre et dans l'abstract: check. voir comment on fait exactement. cosine distance ?
 - biensûr les dates: à faire
 - un genre d'historique de citation des auteurs. Par exemple les 10 auteurs les plus cités par les auteurs du texte: à faire
 - représentation word2vec des abstracts ?
@@ -28,10 +28,13 @@ brainstorming data exploration:
 - les mots les plus fréquents dans les abstracts: pas encore
 - distribution du nombre d'overlapping words chez les textes qui ne se citent pas et chez les textes qui se citent: check
 - faire un tf-idf sur la base de donnée entière et voir les résultats de ça: à faire aussi
+- combien de journaux différents ?
+- combien d'auteurs manquants ?
 
-
+subsampler pour l'exploration, les premiers tests ?
 
 brainstorming recherche d'articles:
 - checker dans les cours les articles qui sont cités
-- faire des recherches en ligne
 - demander à des gens ?
+- faire des recherches en ligne
+
