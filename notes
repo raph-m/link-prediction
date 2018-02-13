@@ -9,10 +9,12 @@ Le modèle "baseline" prend en compte seulement quelques features et les entraî
 - number of common authors
 - difference in publication years
 
+Il faudrait créer ces features et ajouter quelques features au fur et à mesure.
+
 brainstorming sur les features:
-- mots les plus importants d'après TF-IDF dans le titre et dans l'abstract
-- biensûr les dates
-- un genre d'historique de citation des auteurs. Par exemple les 10 auteurs les plus cités par les auteurs du texte
+- mots les plus importants d'après TF-IDF dans le titre et dans l'abstract: check. voir comment on fait exactement
+- biensûr les dates: à faire
+- un genre d'historique de citation des auteurs. Par exemple les 10 auteurs les plus cités par les auteurs du texte: à faire
 - représentation word2vec des abstracts ?
 - représentations sous formes de graphes des textes et essayer d'en extraire des features
 
@@ -21,9 +23,12 @@ brainstorming sur les features:
 relire les cours pour trouver tout ce qui pourrait nous servir.
 
 brainstorming data exploration:
-- nombre d'auteurs différents
-- nombre d'apparitions d'un auteur dans la base de donnée
-- distribution du nombre d'overlapping words chez les textes qui ne se citent pas et chez les textes qui se citent
+- nombre d'auteurs différents: check
+- nombre d'apparitions d'un auteur dans la base de donnée: check
+- les mots les plus fréquents dans les abstracts: pas encore
+- distribution du nombre d'overlapping words chez les textes qui ne se citent pas et chez les textes qui se citent: check
+- faire un tf-idf sur la base de donnée entière et voir les résultats de ça: à faire aussi
+
 
 
 brainstorming recherche d'articles:
