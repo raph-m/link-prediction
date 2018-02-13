@@ -65,7 +65,6 @@ id1 = testing['id1'].values
 id2 = testing['id2'].values
 target = testing["target"].values
 edges = [(id1[i], id2[i]) for i in range(len(id1)) if target[i] == 1]
-nodes = nodes.index.values
 g = igraph.Graph(directed=True)
 g.add_vertices(nodes)
 g.add_edges(edges)
