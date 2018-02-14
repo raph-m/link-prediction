@@ -18,3 +18,14 @@ def lit_eval_nan_proof(string):
         return np.nan
     else:
         return ast.literal_eval(string)
+
+
+
+
+def get_tf_idf_encoding(index):
+    tfidf = models.TfidfModel(dictionary=dictionary)
+    abstract = nodes.at[index, "abstract"]
+    abstract = abstract.split(" ")
+    abstract = dictionary.doc2bow(abstract)
+    ans = tfidf[[abstract]]
+    return ans[0]

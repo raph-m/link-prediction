@@ -44,10 +44,8 @@ nodes = str_vec(nodes)
 # add vertices
 g.add_vertices(nodes)
 
-# add edges
+# create and add edges
 edges = [(str(id1[i]), str(id2[i])) for i in range(len(id1)) if target[i] == 1]
-print("here")
-print(edges)
 g.add_edges(edges)
 
 for i in tqdm(range(len(id1))):
@@ -72,7 +70,7 @@ for i in tqdm(range(len(id1))):
     if target[i] == 1:
         shortest_path_test.append(1)
     else:
-        shortest_path.append(g.shortest_paths_dijkstra(source=str(id1[i]), target=str(id2[i]), mode="OUT"))
+        shortest_path_test.append(g.shortest_paths_dijkstra(source=str(id1[i]), target=str(id2[i]), mode="OUT"))
 testing["shortest_path"] = shortest_path_test
 
 # save data sets
