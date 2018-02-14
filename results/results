@@ -1,0 +1,40 @@
+date: 2018-02-15 00:26:26.153189
+features: ['overlap_title', 'date_diff', 'common_author']
+model: Random Forest
+parameters: default
+cross validation:
+0.7780963908271935
+0.7784294452612852
+0.776469919253952
+0.7771685269126416
+0.7766730028756641
+kaggle score: 0.77710
+
+
+date: 2018-02-15 00:26:26.153189
+features: ['overlap_title', 'date_diff', 'common_author', "journal_similarity"]
+model: Random Forest
+parameters: default
+cross validation:
+0.7797616629976524
+0.7810288945029772
+0.778419522022388
+0.7788338126106805
+0.779093759646472
+kaggle score: 0.77904
+
+
+date: 2018-02-15 00:30:45.924858
+features: ['overlap_title', 'date_diff', 'common_author', 'journal_similarity', 'overlapping_words_abstract']
+model: Random Forest
+parameters: default
+cross validation:
+0.8342363711688586
+0.8365596289286208
+0.8348442754788712
+0.8360140371399327
+0.8359328036912479
+kaggle score: 0.83755
+
+
+
