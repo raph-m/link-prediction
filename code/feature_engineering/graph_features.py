@@ -50,10 +50,10 @@ g.add_edges(edges)
 
 for i in tqdm(range(len(id1))):
     if target[i] == 1:
-        shortest_path.append(1)
-    else:
-        shortest_path.append(g.shortest_paths_dijkstra(source=str(id1[i]), target=str(id2[i]), mode="OUT"))
-        
+        g.delete_edges([(str(id1[i]), str(id2[i]))])
+    shortest_path.append(g.shortest_paths_dijkstra(source=str(id1[i]), target=str(id2[i]), mode="OUT"))
+    if target[i] == 1:
+        g.add_edge(str(id1[i]), str(id2[i]))
 # adding feature to dataframe
 training["shortest_path"] = shortest_path
 
@@ -68,9 +68,10 @@ g.add_vertices(nodes)
 g.add_edges(edges)
 for i in tqdm(range(len(id1))):
     if target[i] == 1:
-        shortest_path_test.append(1)
-    else:
-        shortest_path_test.append(g.shortest_paths_dijkstra(source=str(id1[i]), target=str(id2[i]), mode="OUT"))
+        g.delete_edges([(str(id1[i]), str(id2[i]))])
+    shortest_path_test.append(g.shortest_paths_dijkstra(source=str(id1[i]), target=str(id2[i]), mode="OUT"))
+    if target[i] == 1:
+        g.add_edge(str(id1[i]), str(id2[i]))
 testing["shortest_path"] = shortest_path_test
 
 # save data sets
