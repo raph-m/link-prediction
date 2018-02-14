@@ -7,7 +7,7 @@ from tools import compare_journals, lit_eval_nan_proof
 tqdm.pandas(tqdm())
 
 # path
-path_to_data = "../../data/"
+path_to_data = "../data/"
 
 # loading data
 converter_dict = {'authors': lit_eval_nan_proof, 'journal': lit_eval_nan_proof,
