@@ -29,7 +29,7 @@ id1 = training['id1'].values
 id2 = training['id2'].values
 target = training["target"].values
 
-# creating graph of training set
+# creating graph of citations
 
 # create empty directed graph
 g = igraph.Graph(directed=True)
@@ -51,7 +51,7 @@ g.add_edges(edges)
 for i in tqdm(range(len(id1))):
     if target[i] == 1:
         g.delete_edges([(str(id1[i]), str(id2[i]))])
-    shortest_path.append(g.shortest_paths_dijkstra(source=str(id1[i]), target=str(id2[i]), mode="OUT"))
+    shortest_path.append(g.shortest_paths_dijkstra(source=str(id1[i]), target=str(id2[i]), mode="OUT")[0][0])
     if target[i] == 1:
         g.add_edge(str(id1[i]), str(id2[i]))
 # adding feature to dataframe
@@ -61,15 +61,8 @@ training["shortest_path"] = shortest_path
 shortest_path_test = []
 id1 = testing['id1'].values
 id2 = testing['id2'].values
-target = testing["target"].values
-edges = [(str(id1[i]), str(id2[i])) for i in range(len(id1)) if target[i] == 1]
-g = igraph.Graph(directed=True)
-g.add_vertices(nodes)
-g.add_edges(edges)
 for i in tqdm(range(len(id1))):
-    if target[i] == 1:
-        g.delete_edges([(str(id1[i]), str(id2[i]))])
-    shortest_path_test.append(g.shortest_paths_dijkstra(source=str(id1[i]), target=str(id2[i]), mode="OUT"))
+    shortest_path_test.append(g.shortest_paths_dijkstra(source=str(id1[i]), target=str(id2[i]), mode="OUT")[0][0])
     if target[i] == 1:
         g.add_edge(str(id1[i]), str(id2[i]))
 testing["shortest_path"] = shortest_path_test
