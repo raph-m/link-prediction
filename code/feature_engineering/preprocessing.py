@@ -10,7 +10,7 @@ tqdm.pandas(tqdm())
 path_to_data = "../../data/"
 
 # preprocessing tools
-nltk.download('punkt') # for tokenization
+nltk.download('punkt')  # for tokenization
 nltk.download('stopwords')
 stpwds = set(nltk.corpus.stopwords.words("english"))
 stemmer = nltk.stem.PorterStemmer()

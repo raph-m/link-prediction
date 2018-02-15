@@ -38,7 +38,7 @@ for i in tqdm(range(len(id1))):
         journal_similarity.append(0)
     else:
         journal_similarity.append(compare_journals(journal1, journal2))
-    overlapping_words_abstract.append(set(abstract1).intersection(set(abstract2)))
+    overlapping_words_abstract.append(len(set(abstract1).intersection(set(abstract2))))
 
 # adding feature to dataframe
 training["journal_similarity"] = journal_similarity
@@ -58,7 +58,7 @@ for i in tqdm(range(len(id1))):
         journal_similarity_test.append(0)
     else:
         journal_similarity_test.append(compare_journals(journal1, journal2))
-    overlapping_words_abstract_test.append(set(abstract1).intersection(set(abstract2)))
+    overlapping_words_abstract_test.append(len(set(abstract1).intersection(set(abstract2))))
 testing["journal_similarity"] = journal_similarity_test
 testing["overlapping_words_abstract"] = overlapping_words_abstract_test
 
