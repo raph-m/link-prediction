@@ -8,8 +8,8 @@ import numpy as np
 from tools import f1_score
 
 # path
-path_to_data = "../../data/"
-path_to_submissions = "../../submissions/"
+path_to_data = "../data/"
+path_to_submissions = "../submissions/"
 
 parameters = {
     "n_estimators": 10
@@ -22,17 +22,19 @@ testing = pd.read_csv(path_to_data + "testing_features.txt")
 del training["my_index"]
 del testing["my_index"]
 
+# replace inf in shortest_path with -1
+training['shortest_path'] = training['shortest_path'].replace([float('inf')], [-1])
+testing['shortest_path'] = testing['shortest_path'].replace([float('inf')], [-1])
+
 my_features_string = [
     "overlap_title",
     "date_diff",
     "common_author",
     "journal_similarity",
     "overlapping_words_abstract",
-    "cosine_distance",
-    "score_1_2",
-    "score_2_1"
+    # "cosine_distance",
+    "shortest_path"
 ]
-
 my_features_index = []
 my_features_dic = {}
 
