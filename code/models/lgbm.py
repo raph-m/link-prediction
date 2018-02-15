@@ -38,9 +38,10 @@ my_features_string = [
     "common_author",
     "journal_similarity",
     "overlapping_words_abstract",
-    "cosine_distance",
+    # "cosine_distance",
     # "score_1_2",
-    # "score_2_1"
+    # "score_2_1",
+    "shortest_path"
 ]
 
 my_features_index = []

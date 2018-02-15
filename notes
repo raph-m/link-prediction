@@ -61,6 +61,21 @@ Si je rajoute les deux score en plus, on reste sur de l'overfitting de gros porc
 Light GBM:
 pas d'overfitting sur les features de base. Léger overfitting avec la cosine distance mais les résultats sont meilleurs, genre 0.87. Ensuite rajouter les deux scores n'améliore pas vraiment les résultats.
 
+Avec shortest path on arrive à 94.5/93.8 (train/test).
+En LGBM on a des résultats un peu meilleurs et avec moins d'overfitting.
+
+On passe à 94.1/94.1 si on rajoute cosine distance et l'ajout de cosine distance a un intérêt très limité...
+
+LGBM avec les basics et shortest path:  92.9/92.8
+LGBM avec shortest path et overlapping: 94.2/93.9
+RF avec shortest path et overlapping:   94.5/93.7
+LGBM avec shortest path et cosine distance: 94.2/93.9
+
+
+Un papier qui fait de la link prediction (coauthorship)
+http://www.cs.rpi.edu/~zaki/PaperDir/LINK06.pdf
+Un article qui donne des bonnées idées sur la théorie des graphes:
+http://be.amazd.com/link-prediction/
 
 
 

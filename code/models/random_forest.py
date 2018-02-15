@@ -8,8 +8,8 @@ import numpy as np
 from tools import f1_score
 
 # path
-path_to_data = "../data/"
-path_to_submissions = "../submissions/"
+path_to_data = "../../data/"
+path_to_submissions = "../../submissions/"
 
 parameters = {
     "n_estimators": 10
@@ -85,3 +85,6 @@ submission.to_csv(
     header=["category"]
 )
 print("kaggle score: ")
+
+for i in range(len(RF.feature_importances_)):
+    print(str(my_features_dic[i]) + ": " + str(RF.feature_importances_[i]))
