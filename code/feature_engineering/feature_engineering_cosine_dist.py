@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
@@ -23,10 +25,15 @@ testing.set_index("my_index", inplace=True)
 
 # create dictionary for tfidf
 abstracts = nodes['abstract'].values
+average_len = np.mean(np.array([len(a) for a in abstracts]))
 dictionary = corpora.Dictionary(abstracts)
 
+
+def my_tf(p):
+    return math.log(1.0 + p)
+
 # instatiate tfidf model
-tfidf = models.TfidfModel(dictionary=dictionary)
+tfidf = models.TfidfModel(dictionary=dictionary, wlocal=my_tf)
 
 
 # handy functions to compute cosine distance
@@ -47,16 +54,45 @@ def my_norm(tfidf_abstract):
 def cosine_distance(id1, id2):
     tfidf_abstract1 = get_tf_idf_encoding(id1)
     tfidf_abstract2 = get_tf_idf_encoding(id2)
-    denom = my_norm(tfidf_abstract1) * my_norm(tfidf_abstract2)
     f1 = dict(tfidf_abstract1)
     f2 = dict(tfidf_abstract2)
     ans = 0.0
     for k, v in f1.items():
         if k in f2.keys():
             ans += v * f2[k]
-    return ans / denom
+    return ans
+
+
+def get_score(id1, id2, avglen, k1=1.2, b=0.75):
+    abstract_1 = nodes.at[id1, "abstract"]
+    len_1 = len(abstract_1)
+    abstract_1 = dictionary.doc2bow(abstract_1)
+    tf_1 = dict([
+        (termid, tfidf.wlocal(tf))
+        for termid, tf in abstract_1 if tfidf.idfs.get(termid, 0.0) != 0.0
+    ])
+    idf_1 = dict([
+        (termid, tfidf.idfs.get(termid))
+        for termid, tf in abstract_1 if tfidf.idfs.get(termid, 0.0) != 0.0
+    ])
+
+    abstract_2 = nodes.at[id2, "abstract"]
+    abstract_2 = dictionary.doc2bow(abstract_2)
+    tf_2 = dict([
+        (termid, tfidf.wlocal(tf))
+        for termid, tf in abstract_2 if tfidf.idfs.get(termid, 0.0) != 0.0
+    ])
+
+    ans = 0.0
+    for k, v in tf_1.items():
+        if k in tf_2.keys():
+            ans += idf_1[k] * (v * (k1 + 1)) / (v + k1 * (1 - b + b * len_1 / avglen))
+    return ans
+
 
 # placeholder for feature
+score_1_2 = []
+score_2_1 = []
 cosine_dist = []
 
 # IDs for training set
@@ -65,18 +101,33 @@ id2 = training['id2'].values
 
 # computing features for training set
 for i in tqdm(range(len(id1))):
+    score_1_2.append(get_score(id1[i], id2[i], average_len))
+    score_2_1.append(get_score(id2[i], id1[i], average_len))
     cosine_dist.append(cosine_distance(id1[i], id2[i]))
 
 # add feature to dataframe
+training["score_1_2"] = score_1_2
+training["score_2_1"] = score_2_1
 training["cosine_distance"] = cosine_dist
 
-# repeat process for test set
-cosine_dist_test = []
+score_1_2 = []
+score_2_1 = []
+cosine_dist = []
+
+# IDs for training set
 id1 = testing['id1'].values
 id2 = testing['id2'].values
+
+# computing features for training set
 for i in tqdm(range(len(id1))):
-    cosine_dist_test.append(cosine_distance(id1[i], id2[i]))
-testing["cosine_distance"] = cosine_dist_test
+    score_1_2.append(get_score(id1[i], id2[i], average_len))
+    score_2_1.append(get_score(id2[i], id1[i], average_len))
+    cosine_dist.append(cosine_distance(id1[i], id2[i]))
+
+# add feature to dataframe
+testing["score_1_2"] = score_1_2
+testing["score_2_1"] = score_2_1
+testing["cosine_distance"] = cosine_dist
 
 # save dataframe
 training.to_csv(path_to_data + "training_features.txt")

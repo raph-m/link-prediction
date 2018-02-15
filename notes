@@ -38,3 +38,30 @@ brainstorming recherche d'articles:
 - demander à des gens ?
 - faire des recherches en ligne
 
+
+
+Références à aller checker:
+• Christopher	D.	Manning,	Prabhakar Raghavan and	Hinrich
+Schütze,	Introduction	to	Information	Retrieval,	Cambridge
+University	Press.	2008.	http://www-nlp.stanford.edu/IR-book/
+• “Indexing	by	Latent	Semantic	Analysis”,	S.Deerwester,
+S.Dumais,	T.Landauer,	G.Fumas,	R.Harshman,	Journal	of	the
+Society	for	Information	Science,	1990
+• “Mining	the	Web:	Discovering	Knowledge	from	Hypertext
+Data”,	Soumen	Chakrabarti
+
+
+
+Résultats:
+Random Forest avec les paramètres de base:
+Avec 10 estimateurs j'ai peu d'overfitting et un score de 0.85. Avec 30 estimateurs j'ai pas franchement plus d'overfitting mais les résultats ne s'améliorent pas.
+Si je rajoute cosine distance avec 30 estimateurs j'ai masse overfitting et les résultats qui baissent. Avec 10 estimateurs ça overfitte encore pas mal. Donc faudrait réussir à réduire cet overfitting
+Si je rajoute les deux score en plus, on reste sur de l'overfitting de gros porc.
+
+Light GBM:
+pas d'overfitting sur les features de base. Léger overfitting avec la cosine distance mais les résultats sont meilleurs, genre 0.87. Ensuite rajouter les deux scores n'améliore pas vraiment les résultats.
+
+
+
+
+

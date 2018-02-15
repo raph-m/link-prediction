@@ -4,18 +4,28 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 import pandas as pd
 import numpy as np
-
-from tools import f1_score
+import lightgbm as lgb
+from tools import f1_score, binary_error, f1_score_lgbm
 
 # path
 path_to_data = "../../data/"
 path_to_submissions = "../../submissions/"
 
-parameters = {
-    "n_estimators": 10
-}
 # parameters
-
+params = {
+    'task': 'train',
+    'boosting_type': 'gbdt',
+    'objective': 'binary',
+    # 'metric': {},
+    'num_leaves': 200,
+    'learning_rate': 0.1,
+    'feature_fraction': 0.6,
+    'bagging_fraction': 0.6,
+    'bagging_freq': 5,
+    'verbose': 0,
+    "min_data_in_leaf": 2,
+    "max_depth": 200
+}
 # load data
 training = pd.read_csv(path_to_data + "training_features.txt")
 testing = pd.read_csv(path_to_data + "testing_features.txt")
@@ -29,8 +39,8 @@ my_features_string = [
     "journal_similarity",
     "overlapping_words_abstract",
     "cosine_distance",
-    "score_1_2",
-    "score_2_1"
+    # "score_1_2",
+    # "score_2_1"
 ]
 
 my_features_index = []
@@ -55,22 +65,38 @@ print("date: "+str(now))
 print("features: "+str(my_features_string))
 print("model: Random Forest")
 print("parameters:")
-print(parameters)
+print(params)
 print("cross validation:")
 
-RF = RandomForestClassifier(n_estimators=parameters["n_estimators"])
+
+
+
 k = 5
 kf = KFold(k)
 predictions = np.zeros((X_test.shape[0], k))
 i = 0
 
-for train_index, test_index in kf.split(X_train, Y_train):
-    RF.fit(X_train[train_index], Y_train[train_index])
-    Y_pred = RF.predict(X_train[test_index])
-    Y_pred_train = RF.predict(X_train[train_index])
-    predictions[:, i] = RF.predict(X_test)
+results = []
+print('Start training...')
+for train_index, test_index in kf.split(X_train):
+    lgb_train = lgb.Dataset(X_train[train_index], Y_train[train_index])
+    lgb_eval = lgb.Dataset(X_train[test_index], Y_train[test_index], reference=lgb_train)
+    gbm = lgb.train(params,
+                    train_set=lgb_train,
+                    num_boost_round=100,
+                    valid_sets=lgb_eval,
+                    verbose_eval=40,
+                    feval=f1_score_lgbm
+                    )
+    res = gbm.predict(X_test)
+    predictions[:, i] = res
+
+    Y_pred = gbm.predict(X_train[test_index]).round()
+    Y_pred_train = gbm.predict(X_train[train_index]).round()
+    predictions[:, i] = gbm.predict(X_test)
     print("train: "+str(f1_score(Y_train[train_index], Y_pred_train)))
     print("test: "+str(f1_score(Y_train[test_index], Y_pred)))
+
     i += 1
 
 Y_test = (np.sum(predictions, axis=1) > 2.5).astype(int)

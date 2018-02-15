@@ -37,4 +37,52 @@ cross validation:
 kaggle score: 0.83755
 
 
+date: 2018-02-15 15:09:52.437552
+features: ['overlap_title', 'date_diff', 'common_author', 'journal_similarity', 'overlapping_words_abstract', 'cosine_distance']
+model: Random Forest
+parameters:
+{'min_data_in_leaf': 2, 'max_depth': 200, 'boosting_type': 'gbdt', 'objective': 'binary', 'task': 'train', 'verbose': 0, 'feature_fraction': 0.6, 'bagging_fraction': 0.6, 'learning_rate': 0.1, 'bagging_freq': 5, 'num_leaves': 200}
+cross validation:
+Start training...
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[40]	valid_0's f1 score: 0.870444
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[80]	valid_0's f1 score: 0.871552
+train: 0.874026271431
+test: 0.871902069297
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[40]	valid_0's f1 score: 0.872282
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[80]	valid_0's f1 score: 0.872716
+train: 0.873581441765
+test: 0.872562595906
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[40]	valid_0's f1 score: 0.87105
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[80]	valid_0's f1 score: 0.872016
+train: 0.873792318185
+test: 0.872204161004
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[40]	valid_0's f1 score: 0.871357
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[80]	valid_0's f1 score: 0.872234
+train: 0.873583781681
+test: 0.872538922426
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[40]	valid_0's f1 score: 0.869521
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[80]	valid_0's f1 score: 0.870304
+train: 0.874169648139
+test: 0.870220013444
+kaggle score:
 
