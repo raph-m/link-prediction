@@ -38,10 +38,14 @@ my_features_string = [
     "common_author",
     "journal_similarity",
     "overlapping_words_abstract",
-    # "cosine_distance",
-    # "score_1_2",
-    # "score_2_1",
-    "shortest_path"
+    "cosine_distance",
+    "shortest_path",
+    "jaccard",
+    "adar",
+    "preferential_attachment",
+    "resource_allocation_index",
+    "out_neighbors",
+    "in_neighbors"
 ]
 
 my_features_index = []
@@ -110,3 +114,4 @@ submission.to_csv(
     header=["category"]
 )
 print("kaggle score: ")
+

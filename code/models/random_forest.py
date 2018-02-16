@@ -32,8 +32,14 @@ my_features_string = [
     "common_author",
     "journal_similarity",
     "overlapping_words_abstract",
-    # "cosine_distance",
-    "shortest_path"
+    "cosine_distance",
+    "shortest_path",
+    "jaccard",
+    "adar",
+    "preferential_attachment",
+    "resource_allocation_index",
+    "out_neighbors",
+    "in_neighbors"
 ]
 my_features_index = []
 my_features_dic = {}
@@ -43,8 +49,8 @@ for i in range(len(training.columns)):
     if training.columns[i] == "target":
         target = i
     elif training.columns[i] in my_features_string:
-        my_features_index.append(i)
         my_features_dic.update({len(my_features_index): training.columns[i]})
+        my_features_index.append(i)
 
 # separating features and labels
 training_val = training.values
