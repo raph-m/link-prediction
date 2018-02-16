@@ -1,9 +1,8 @@
+from sklearn import svm
 import datetime
-from sklearn.model_selection import KFold
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
-import pandas as pd
 import numpy as np
+import pandas as pd
+from sklearn.model_selection import KFold
 
 from tools import f1_score
 
@@ -11,10 +10,8 @@ from tools import f1_score
 path_to_data = "../../data/"
 path_to_submissions = "../../submissions/"
 
-parameters = {
-    "n_estimators": 10
-}
 # parameters
+parameters = {}
 
 # load data
 training = pd.read_csv(path_to_data + "training_features.txt")
@@ -32,24 +29,16 @@ my_features_string = [
     "common_author",
     "journal_similarity",
     "overlapping_words_abstract",
-    "cosine_distance",
-    "shortest_path",
-    "jaccard",
-    "adar",
-    "preferential_attachment",
-    "resource_allocation_index",
-    "out_neighbors",
-    "in_neighbors"
+    # "cosine_distance",
+    "shortest_path"
 ]
 my_features_index = []
-my_features_dic = {}
 
 target = 0
 for i in range(len(training.columns)):
     if training.columns[i] == "target":
         target = i
     elif training.columns[i] in my_features_string:
-        my_features_dic.update({len(my_features_index): training.columns[i]})
         my_features_index.append(i)
 
 # separating features and labels
@@ -59,38 +48,34 @@ X_train, Y_train = training_val[:, my_features_index].astype(float), training_va
 X_test = testing_val[:, my_features_index]
 
 now = datetime.datetime.now()
-print("date: "+str(now))
-print("features: "+str(my_features_string))
+print("date: " + str(now))
+print("features: " + str(my_features_string))
 print("model: Random Forest")
 print("parameters:")
 print(parameters)
 print("cross validation:")
 
-RF = RandomForestClassifier(n_estimators=parameters["n_estimators"])
+svm_classifier = svm.SVC(verbose=True)
 k = 5
 kf = KFold(k)
 predictions = np.zeros((X_test.shape[0], k))
 i = 0
 
 for train_index, test_index in kf.split(X_train, Y_train):
-    RF.fit(X_train[train_index], Y_train[train_index])
-    Y_pred = RF.predict(X_train[test_index])
-    Y_pred_train = RF.predict(X_train[train_index])
-    predictions[:, i] = RF.predict(X_test)
-    print("train: "+str(f1_score(Y_train[train_index], Y_pred_train)))
-    print("test: "+str(f1_score(Y_train[test_index], Y_pred)))
+    svm_classifier.fit(X_train[train_index], Y_train[train_index])
+    Y_pred = svm_classifier.predict(X_train[test_index])
+    Y_pred_train = svm_classifier.predict(X_train[train_index])
+    predictions[:, i] = svm_classifier.predict(X_test)
+    print("train: " + str(f1_score(Y_train[train_index], Y_pred_train)))
+    print("test: " + str(f1_score(Y_train[test_index], Y_pred)))
     i += 1
 
 Y_test = (np.sum(predictions, axis=1) > 2.5).astype(int)
 
 submission = pd.DataFrame(Y_test)
 submission.to_csv(
-    path_or_buf=path_to_submissions+"-".join(my_features_string)+"RF.csv",
+    path_or_buf=path_to_submissions + "-".join(my_features_string) + "SVM.csv",
     index=True,
     index_label="id",
     header=["category"]
 )
-print("kaggle score: ")
-
-for i in range(len(RF.feature_importances_)):
-    print(str(my_features_dic[i]) + ": " + str(RF.feature_importances_[i]))
