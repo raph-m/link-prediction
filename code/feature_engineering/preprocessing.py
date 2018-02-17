@@ -1,5 +1,6 @@
-import pandas as pd
+import re
 import nltk
+import pandas as pd
 from tqdm import tqdm
 
 
@@ -33,6 +34,8 @@ def authors_element_wise_preprocess(string):
     if pd.isna(string):
         return string
     tokens = string.lower().split(", ")
+    for i in range(len(tokens)):
+        tokens[i] = tokens[i].split('(', 1)[0].strip(' ')
     return tokens
 
 
