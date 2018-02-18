@@ -94,9 +94,25 @@ for i in tqdm(range(len(id1))):
         if isinstance(authors1, float):
             author_out_degree_sum_source.append(np.nan)
             author_out_degree_mean_source.append(np.nan)
+        else:
+            sum_out = 0
+            n_source = len(authors1)
+            for author1 in authors1:
+                sum_out += g.degree(author1, mode='OUT')
+            mean_out = sum_out / n_source
+            author_out_degree_sum_source.append(sum_out)
+            author_out_degree_mean_source.append(mean_out)
         if isinstance(authors2, float):
             author_in_degree_sum_target.append(np.nan)
             author_in_degree_mean_target.append(np.nan)
+        else:
+            sum_in = 0
+            n_target = len(authors2)
+            for author2 in authors2:
+                sum_in += g.degree(author2, mode='IN')
+            mean_in = sum_in / n_target
+            author_in_degree_sum_target.append(sum_in)
+            author_in_degree_mean_target.append(mean_in)
         continue
     min_value = float('inf')
     max_value = - float('inf')
@@ -161,9 +177,25 @@ for i in tqdm(range(len(id1))):
         if isinstance(authors1, float):
             author_out_degree_sum_source_test.append(np.nan)
             author_out_degree_mean_source_test.append(np.nan)
+        else:
+            sum_out = 0
+            n_source = len(authors1)
+            for author1 in authors1:
+                sum_out += g.degree(author1, mode='OUT')
+            mean_out = sum_out / n_source
+            author_out_degree_sum_source_test.append(sum_out)
+            author_out_degree_mean_source_test.append(mean_out)
         if isinstance(authors2, float):
             author_in_degree_sum_target_test.append(np.nan)
             author_in_degree_mean_target_test.append(np.nan)
+        else:
+            sum_in = 0
+            n_target = len(authors2)
+            for author2 in authors2:
+                sum_in += g.degree(author2, mode='IN')
+            mean_in = sum_in / n_target
+            author_in_degree_sum_target_test.append(sum_in)
+            author_in_degree_mean_target_test.append(mean_in)
         continue
     min_value = float('inf')
     max_value = - float('inf')
