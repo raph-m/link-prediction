@@ -5,13 +5,16 @@ import pandas as pd
 from tqdm import tqdm
 from gensim import corpora, models
 
-from tools import lit_eval_nan_proof
+from code.feature_engineering.tools import lit_eval_nan_proof
+
+
+# this script adds the features score_1_2, score_2_1 and cosine_distance to the features csv files.
 
 # progress bar for pandas
 tqdm.pandas(tqdm())
 
 # path
-path_to_data = "../../data/"
+path_to_data = "data/"
 
 # loading data
 converter_dict = {'authors': lit_eval_nan_proof, 'journal': lit_eval_nan_proof,
@@ -32,7 +35,7 @@ dictionary = corpora.Dictionary(abstracts)
 def my_tf(p):
     return math.log(1.0 + p)
 
-# instatiate tfidf model
+# instantiate tf-idf model
 tfidf = models.TfidfModel(dictionary=dictionary, wlocal=my_tf)
 
 
@@ -64,6 +67,7 @@ def cosine_distance(id1, id2):
 
 
 def get_score(id1, id2, avglen, k1=1.2, b=0.75):
+
     abstract_1 = nodes.at[id1, "abstract"]
     len_1 = len(abstract_1)
     abstract_1 = dictionary.doc2bow(abstract_1)
@@ -105,7 +109,7 @@ for i in tqdm(range(len(id1))):
     score_2_1.append(get_score(id2[i], id1[i], average_len))
     cosine_dist.append(cosine_distance(id1[i], id2[i]))
 
-# add feature to dataframe
+# add feature to data-frame
 training["score_1_2"] = score_1_2
 training["score_2_1"] = score_2_1
 training["cosine_distance"] = cosine_dist
@@ -124,11 +128,11 @@ for i in tqdm(range(len(id1))):
     score_2_1.append(get_score(id2[i], id1[i], average_len))
     cosine_dist.append(cosine_distance(id1[i], id2[i]))
 
-# add feature to dataframe
+# add feature to data-frame
 testing["score_1_2"] = score_1_2
 testing["score_2_1"] = score_2_1
 testing["cosine_distance"] = cosine_dist
 
-# save dataframe
+# save data-frame
 training.to_csv(path_to_data + "training_features.txt")
 testing.to_csv(path_to_data + "testing_features.txt")
