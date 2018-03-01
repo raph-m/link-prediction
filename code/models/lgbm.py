@@ -19,7 +19,7 @@ params = {
     # 'metric': {},
     'num_leaves': 200,
     'learning_rate': 0.1,
-    'feature_fraction': 0.6,
+    'feature_fraction': 0.4,
     'bagging_fraction': 0.6,
     'bagging_freq': 5,
     'verbose': 0,
@@ -45,7 +45,8 @@ my_features_string = [
     "preferential_attachment",
     "resource_allocation_index",
     "out_neighbors",
-    "in_neighbors"
+    "in_neighbors",
+    "common_neighbors"
 ]
 
 my_features_index = []
@@ -72,8 +73,6 @@ print("model: Random Forest")
 print("parameters:")
 print(params)
 print("cross validation:")
-
-
 
 
 k = 5

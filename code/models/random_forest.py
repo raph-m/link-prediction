@@ -12,7 +12,9 @@ path_to_data = "../../data/"
 path_to_submissions = "../../submissions/"
 
 parameters = {
-    "n_estimators": 10
+    "n_estimators": 10,
+    "criterion": "entropy",  # default = gini
+    "bootstrap": True
 }
 # parameters
 
@@ -39,7 +41,8 @@ my_features_string = [
     "preferential_attachment",
     "resource_allocation_index",
     "out_neighbors",
-    "in_neighbors"
+    "in_neighbors",
+    "common_neighbors"
 ]
 my_features_index = []
 my_features_dic = {}

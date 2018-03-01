@@ -38,6 +38,7 @@ jaccard = np.zeros(n)
 adar = np.zeros(n)
 preferential_attachment = np.zeros(n)
 resource_allocation_index = np.zeros(n)
+common_neighbors = np.zeros(n)
 
 # computing features for training set
 for i in tqdm(range(len(id1))):
@@ -60,6 +61,10 @@ for i in tqdm(range(len(id1))):
     pred = [(u, v, p) for (u, v, p) in pred]
     resource_allocation_index[i] = pred[0][2]
 
+    pred = nx.common_neighbors(G, id1[i], id2[i])
+    pred = len([u for u in pred])
+    common_neighbors[i] = pred
+
     if training.at[str(id1[i]) + "|" + str(id2[i]), "target"] == 1:
         G.add_edge(id1[i], id2[i])
 
@@ -68,6 +73,7 @@ training["jaccard"] = jaccard
 training["adar"] = adar
 training["preferential_attachment"] = preferential_attachment
 training["resource_allocation_index"] = resource_allocation_index
+training["common_neighbors"] = resource_allocation_index
 
 
 # IDs for training set
@@ -80,6 +86,7 @@ jaccard = np.zeros(n)
 adar = np.zeros(n)
 preferential_attachment = np.zeros(n)
 resource_allocation_index = np.zeros(n)
+common_neighbors = np.zeros(n)
 
 # computing features for training set
 for i in tqdm(range(len(id1))):
@@ -99,13 +106,33 @@ for i in tqdm(range(len(id1))):
     pred = [(u, v, p) for (u, v, p) in pred]
     resource_allocation_index[i] = pred[0][2]
 
+    pred = nx.common_neighbors(G, id1[i], id2[i])
+    pred = len([u for u in pred])
+    common_neighbors[i] = pred
+
 # add feature to dataframe
 testing["jaccard"] = jaccard
 testing["adar"] = adar
 testing["preferential_attachment"] = preferential_attachment
 testing["resource_allocation_index"] = resource_allocation_index
+testing["common_neighbors"] = resource_allocation_index
 
 
 # save dataframe
 training.to_csv(path_to_data + "training_features.txt")
 testing.to_csv(path_to_data + "testing_features.txt")
+
+
+# bout de code pour katz:
+# katz = 0.0
+# counter = 0
+# try:
+#     iterator = nx.all_shortest_paths(G, source=id1[i], target=id2[i])
+#     for p in iterator:
+#         len_p = len(p)
+#         katz += len_p * beta ** (len_p)
+#         counter += 1
+#         if counter >= 1:
+#             break
+# except:
+#     pass
