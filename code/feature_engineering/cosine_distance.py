@@ -9,6 +9,7 @@ from code.feature_engineering.tools import lit_eval_nan_proof
 
 
 # this script adds the features score_1_2, score_2_1 and cosine_distance to the features csv files.
+# this script takes approximately 10 minutes to run
 
 # progress bar for pandas
 tqdm.pandas(tqdm())
