@@ -3,13 +3,16 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
-from tools import lit_eval_nan_proof
+from code.feature_engineering.tools import lit_eval_nan_proof
+
+# this script adds the feature shortest_path to the files training_features and testing_features
+# this script takes approximately 1000 minutes to execute
 
 # progress bar for pandas
 tqdm.pandas(tqdm())
 
 # path
-path_to_data = "../data/"
+path_to_data = "data/"
 
 # loading data
 converter_dict = {'authors': lit_eval_nan_proof, 'journal': lit_eval_nan_proof,
