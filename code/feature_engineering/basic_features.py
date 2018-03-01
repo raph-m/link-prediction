@@ -1,13 +1,15 @@
 import pandas as pd
 from tqdm import tqdm
 
-from tools import compare_journals, lit_eval_nan_proof
+from code.feature_engineering.tools import compare_journals, lit_eval_nan_proof
+
+# this script adds the features journal_similarity and overlapping_words_abstract to the csv features files
 
 # progress bar for pandas
 tqdm.pandas(tqdm())
 
 # path
-path_to_data = "../data/"
+path_to_data = "data/"
 
 # loading data
 converter_dict = {'authors': lit_eval_nan_proof, 'journal': lit_eval_nan_proof,
