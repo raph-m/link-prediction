@@ -1,5 +1,13 @@
-import ast
 import numpy as np
+import pandas as pd
+import ast
+import nltk
+
+# pre-processing tools
+nltk.download('punkt')  # for tokenization
+nltk.download('stopwords')
+stpwds = set(nltk.corpus.stopwords.words("english"))
+stemmer = nltk.stem.PorterStemmer()
 
 
 # journal similarity feature
@@ -18,3 +26,28 @@ def lit_eval_nan_proof(string):
         return np.nan
     else:
         return ast.literal_eval(string)
+
+
+# element-wise stemmed tokenization and stopwords removal for titles and abstracts
+def text_element_wise_preprocess(string):
+    tokens = string.lower().split(" ")
+    tokens_wo_stpwds = [stemmer.stem(token) for token in tokens if token not in stpwds]
+    return tokens_wo_stpwds
+
+
+# element-wise lower case tokenization for authors
+def authors_element_wise_preprocess(string):
+    if pd.isna(string):
+        return string
+    tokens = string.lower().split(", ")
+    for i in range(len(tokens)):
+        tokens[i] = tokens[i].split('(', 1)[0].strip(' ')
+    return tokens
+
+
+# element-wise lower case tokenization for journals
+def journal_element_wise_preprocess(string):
+    if pd.isna(string):
+        return string
+    tokens = string.lower().rstrip(".").split(".")
+    return tokens

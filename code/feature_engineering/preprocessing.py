@@ -1,52 +1,31 @@
-import re
 import nltk
 import pandas as pd
 from tqdm import tqdm
 
+from code.feature_engineering.tools import\
+    text_element_wise_preprocess,\
+    authors_element_wise_preprocess,\
+    journal_element_wise_preprocess
+
+# This script reads the data in node_information.csv and training_set and testing_set.csv, and creates the
+# files "nodes_preprocessed.csv", "training_new_index.txt" and "testing_new_index.txt".
 
 # progress bar for pandas
 tqdm.pandas(tqdm())
 
 # path
-path_to_data = "../../data/"
+path_to_data = "data/"
 
-# preprocessing tools
+# pre-processing tools
 nltk.download('punkt')  # for tokenization
 nltk.download('stopwords')
 stpwds = set(nltk.corpus.stopwords.words("english"))
 stemmer = nltk.stem.PorterStemmer()
 
-# preprocessing titles
+# pre-processing titles
 nodes_header = ["id", "year", "title", "authors", "journal", "abstract"]
 nodes = pd.read_csv(path_to_data+"node_information.csv", names=nodes_header)
 nodes.set_index("id", inplace=True)
-
-
-# element-wise stemmed tokenization and stopwords removal for titles and abstracts
-def text_element_wise_preprocess(string):
-    tokens = string.lower().split(" ")
-    tokens_wo_stpwds = [stemmer.stem(token) for token in tokens if token not in stpwds]
-    return tokens_wo_stpwds
-
-
-# element-wise lower case tokenization for authors
-def authors_element_wise_preprocess(string):
-    if pd.isna(string):
-        return string
-    tokens = string.lower().split(", ")
-    for i in range(len(tokens)):
-        tokens[i] = tokens[i].split('(', 1)[0].strip(' ')
-    return tokens
-
-
-# element-wise lower case tokenization for journals
-def journal_element_wise_preprocess(string):
-    if pd.isna(string):
-        return string
-    tokens = string.lower().rstrip(".").split(".")
-    return tokens
-
-# element_wise preprocessing for journal
 
 # apply to DF
 nodes['title'] = nodes['title'].progress_apply(text_element_wise_preprocess)
@@ -63,6 +42,7 @@ training["my_index"] = training["id1"].astype(str) + "|" + training["id2"].astyp
 training.set_index("my_index", inplace=True)
 
 # same process for testing set
+names = ["id1", "id2"]
 testing = pd.read_csv(path_to_data + "testing_set.txt", names=names, delimiter=" ")
 testing["my_index"] = testing["id1"].astype(str) + "|" + testing["id2"].astype(str)
 testing.set_index("my_index", inplace=True)
