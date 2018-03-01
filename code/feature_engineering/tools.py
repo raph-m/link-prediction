@@ -3,12 +3,6 @@ import pandas as pd
 import ast
 import nltk
 
-# pre-processing tools
-nltk.download('punkt')  # for tokenization
-nltk.download('stopwords')
-stpwds = set(nltk.corpus.stopwords.words("english"))
-stemmer = nltk.stem.PorterStemmer()
-
 
 # journal similarity feature
 def compare_journals(journal1, journal2):
@@ -30,6 +24,12 @@ def lit_eval_nan_proof(string):
 
 # element-wise stemmed tokenization and stopwords removal for titles and abstracts
 def text_element_wise_preprocess(string):
+    # pre-processing tools
+    nltk.download('punkt')  # for tokenization
+    nltk.download('stopwords')
+    stpwds = set(nltk.corpus.stopwords.words("english"))
+    stemmer = nltk.stem.PorterStemmer()
+
     tokens = string.lower().split(" ")
     tokens_wo_stpwds = [stemmer.stem(token) for token in tokens if token not in stpwds]
     return tokens_wo_stpwds

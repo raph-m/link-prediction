@@ -1,14 +1,16 @@
-import ast
 import pandas as pd
 from tqdm import tqdm
 
-from tools import lit_eval_nan_proof
+from code.feature_engineering.tools import lit_eval_nan_proof
+
+# this script produces the following features: overlap_title, date_diff and common_author
+# this is the script that you should run right after the pre-processing
 
 # progress bar for pandas
 tqdm.pandas(tqdm())
 
 # path
-path_to_data = "../../data/"
+path_to_data = "data/"
 
 # loading preprocessed data
 converter_dict = {'authors': lit_eval_nan_proof, 'journal': lit_eval_nan_proof,
@@ -46,7 +48,7 @@ for i in tqdm(range(len(id1))):
     else:
         common_author.append(len(set(author1).intersection(set(author2))))
 
-# adding feature to dataframe
+# adding feature to data-frame
 training["overlap_title"] = overlap_title
 training["date_diff"] = date_diff
 training["common_author"] = common_author

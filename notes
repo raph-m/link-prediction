@@ -82,5 +82,7 @@ https://www.cs.upc.edu/~dariog/PhD-Thesis-Link-Prediction-DGG.pdf
 
 
 relecture de code le 1er Mars:
+_ je change un peu le format du code. Maintenant c'est en mode projet donc tu dois ouvrir tout le bordel sous pycharm et changer les paramètres pour que le working directory ça soit toujours la source du projet
 - preprocessing. done.
-- 
+- pour moi dans author_graph_features il y a un soucis. Le même que ce qu'on avait déjà eu avant, il faudrait supprimer les arrêtes qui existent si target == 1. à corriger ou à jeter... Si tu le corriges je peux le faire tourner sur Compute Engine.
+-

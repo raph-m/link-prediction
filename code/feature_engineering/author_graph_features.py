@@ -1,16 +1,16 @@
-import igraph
 import pandas as pd
 import numpy as np
 from tqdm import tqdm
 from itertools import permutations
+import igraph
 
-from tools import lit_eval_nan_proof
+from code.feature_engineering.tools import lit_eval_nan_proof
 
 # progress bar for pandas
 tqdm.pandas(tqdm())
 
 # path
-path_to_data = "../../data/"
+path_to_data = "data/"
 
 # loading data
 converter_dict = {'authors': lit_eval_nan_proof, 'journal': lit_eval_nan_proof,
@@ -24,7 +24,7 @@ testing.set_index("my_index", inplace=True)
 
 # create author graph
 # vertices are authors
-# edge of weight 1 if they cowrote a paper, 2 if they only cite each other
+# edge of weight 1 if they co-wrote a paper, 2 if they only cite each other
 
 # create empty directed graph
 g = igraph.Graph(directed=True)
