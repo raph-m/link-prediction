@@ -1,18 +1,20 @@
-import math
-
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
-from gensim import corpora, models
 import networkx as nx
 
-from tools import lit_eval_nan_proof
+from code.feature_engineering.tools import lit_eval_nan_proof
+
+# this script computes some features by considering the bidirectional graph of citations: jaccard, adar,
+#  preferential_attachment, resource_allocation_index and common_neighbors
+# approx 10 minutes to run it
+# NB: the katz feature is not computed since it requires way too much computer power.
 
 # progress bar for pandas
 tqdm.pandas(tqdm())
 
 # path
-path_to_data = "../../data/"
+path_to_data = "data/"
 
 # loading data
 converter_dict = {'authors': lit_eval_nan_proof, 'journal': lit_eval_nan_proof,
@@ -68,7 +70,7 @@ for i in tqdm(range(len(id1))):
     if training.at[str(id1[i]) + "|" + str(id2[i]), "target"] == 1:
         G.add_edge(id1[i], id2[i])
 
-# add feature to dataframe
+# add feature to data-frame
 training["jaccard"] = jaccard
 training["adar"] = adar
 training["preferential_attachment"] = preferential_attachment
@@ -110,7 +112,7 @@ for i in tqdm(range(len(id1))):
     pred = len([u for u in pred])
     common_neighbors[i] = pred
 
-# add feature to dataframe
+# add feature to data-frame
 testing["jaccard"] = jaccard
 testing["adar"] = adar
 testing["preferential_attachment"] = preferential_attachment
@@ -118,7 +120,7 @@ testing["resource_allocation_index"] = resource_allocation_index
 testing["common_neighbors"] = resource_allocation_index
 
 
-# save dataframe
+# save data-frame
 training.to_csv(path_to_data + "training_features.txt")
 testing.to_csv(path_to_data + "testing_features.txt")
 
@@ -136,3 +138,4 @@ testing.to_csv(path_to_data + "testing_features.txt")
 #             break
 # except:
 #     pass
+
