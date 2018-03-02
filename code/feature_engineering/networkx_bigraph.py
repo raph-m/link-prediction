@@ -8,7 +8,6 @@ from code.feature_engineering.tools import lit_eval_nan_proof
 # this script computes some features by considering the bidirectional graph of citations: jaccard, adar,
 #  preferential_attachment, resource_allocation_index and common_neighbors
 # approx 10 minutes to run it
-# NB: the katz feature is not computed since it requires way too much computer power.
 
 # progress bar for pandas
 tqdm.pandas(tqdm())
@@ -123,19 +122,3 @@ testing["common_neighbors"] = resource_allocation_index
 # save data-frame
 training.to_csv(path_to_data + "training_features.txt")
 testing.to_csv(path_to_data + "testing_features.txt")
-
-
-# bout de code pour katz:
-# katz = 0.0
-# counter = 0
-# try:
-#     iterator = nx.all_shortest_paths(G, source=id1[i], target=id2[i])
-#     for p in iterator:
-#         len_p = len(p)
-#         katz += len_p * beta ** (len_p)
-#         counter += 1
-#         if counter >= 1:
-#             break
-# except:
-#     pass
-

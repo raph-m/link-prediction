@@ -87,4 +87,6 @@ _ je change un peu le format du code. Maintenant c'est en mode projet donc tu do
 - pour moi dans author_graph_features il y a un soucis. Le même que ce qu'on avait déjà eu avant, il faudrait supprimer les arrêtes qui existent si target == 1. à corriger ou à jeter... Si tu le corriges je peux le faire tourner sur Compute Engine.
 - baseline: ok
 - citation_graph_features: ok
--
+- network_x bigraph: ok
+- network_x digraph: ok
+- en train de faire le network_x bigraph_long pour calculer katz
