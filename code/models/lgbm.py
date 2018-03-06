@@ -40,6 +40,14 @@ my_features_string = [
     "overlapping_words_abstract",
     "cosine_distance",
     "shortest_path",
+    # "author_min_shortest_path",
+    # "author_max_shortest_path",
+    # "author_sum_shortest_path",
+    # "author_mean_shortest_path",
+    # "author_out_degree_sum_source",
+    "author_out_degree_mean_source",
+    # "author_in_degree_sum_target",
+    "author_in_degree_mean_target",
     "jaccard",
     "adar",
     "preferential_attachment",
@@ -51,7 +59,8 @@ my_features_string = [
 
 my_features_index = []
 my_features_dic = {}
-
+my_features_acronym = ["_".join(list(map(lambda x: x[0], string.split('_')))) for string in my_features_string]
+print(my_features_acronym)
 target = 0
 for i in range(len(training.columns)):
     if training.columns[i] == "target":
@@ -107,7 +116,7 @@ Y_test = (np.sum(predictions, axis=1) > 2.5).astype(int)
 
 submission = pd.DataFrame(Y_test)
 submission.to_csv(
-    path_or_buf=path_to_submissions+"-".join(my_features_string)+".csv",
+    path_or_buf=path_to_submissions+"-".join(my_features_acronym)+".csv",
     index=True,
     index_label="id",
     header=["category"]
