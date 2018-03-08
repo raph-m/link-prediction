@@ -42,12 +42,15 @@ beta_2 = 0.9
 
 def work(i0=None, n=None, is_training=True):
 
+    print(i0)
+
     G = nx.Graph()
     G.add_nodes_from(nodes.index.values)
     G.add_edges_from(zip(training[training["target"] == 1]["id1"], training[training["target"] == 1]["id2"]))
 
     ans = np.zeros(n)
     ans_2 = np.zeros(n)
+
     for i in range(i0, i0+n):
         if is_training:
             if training.at[str(id1[i]) + "|" + str(id2[i]), "target"] == 1:
@@ -81,7 +84,6 @@ def work(i0=None, n=None, is_training=True):
 
 def callback(r):
     ans, ans_2, i0 = r
-    print(i0)
 
 # computing features for training set
 
@@ -89,9 +91,10 @@ pool = Pool(processes=2)
 print("starting pool...")
 import time
 start = time.time()
-n_tasks = 512
+n_tasks = 200000
 tasks = []
 step = int(n / n_tasks)
+print(step)
 for i0 in range(n_tasks):
     kwds = {
         "i0": i0 * step,
