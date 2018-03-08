@@ -14,7 +14,8 @@ path_to_submissions = "../../submissions/"
 # parameters
 parameters = {
     "max_iter": 100,
-    "tol": 1e-6
+    "tol": 1e-6,
+    "penalty": "l2"
 }
 
 # load data
@@ -59,7 +60,9 @@ print("parameters:")
 print(parameters)
 print("cross validation:")
 
-LogReg = LogisticRegressionCV(max_iter=parameters['max_iter'], tol=parameters['tol'])
+LogReg = LogisticRegressionCV(max_iter=parameters['max_iter'],
+                              tol=parameters['tol'],
+                              penalty=parameters['penalty'])
 k = 5
 kf = KFold(k)
 predictions = np.zeros((X_test.shape[0], k))
