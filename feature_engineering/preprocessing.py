@@ -5,7 +5,8 @@ from tqdm import tqdm
 from feature_engineering.tools import\
     text_element_wise_preprocess,\
     authors_element_wise_preprocess,\
-    journal_element_wise_preprocess
+    journal_element_wise_preprocess, \
+    lit_eval_nan_proof
 
 # This script reads the data in node_information.csv and training_set and testing_set.csv, and creates the
 # files "nodes_preprocessed.csv", "training_new_index.txt" and "testing_new_index.txt".
@@ -28,8 +29,11 @@ stpwds = set(nltk.corpus.stopwords.words("english"))
 stemmer = nltk.stem.PorterStemmer()
 
 # pre-processing titles
+converter_dict = {'authors': lit_eval_nan_proof, 'journal': lit_eval_nan_proof,
+                  'title': lit_eval_nan_proof, 'abstract': lit_eval_nan_proof}
+
 nodes_header = ["id", "year", "title", "authors", "journal", "abstract"]
-nodes = pd.read_csv(path_to_data+"node_information.csv", names=nodes_header)
+nodes = pd.read_csv(path_to_data+"node_information.csv", names=nodes_header, converters=converter_dict)
 nodes.set_index("id", inplace=True)
 
 # apply to DF
