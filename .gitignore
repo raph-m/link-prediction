@@ -111,3 +111,4 @@ code/data_exploration/camboui.ipynb
 /code/models/camboui.ipynb
 /code/feature_engineering/camboui.py
 /code/feature_engineering/camboui_network_x.ipynb
+/tests/multiprocessing_tuto.py
