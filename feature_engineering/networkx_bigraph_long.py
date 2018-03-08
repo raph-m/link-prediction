@@ -31,7 +31,7 @@ id2 = training['id2'].values
 
 # placeholder for feature
 n = len(id1)
-n = 100
+n = 1000
 katz = np.zeros(n)
 katz_2 = np.zeros(n)
 breaking_point = 10

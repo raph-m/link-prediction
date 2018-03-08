@@ -14,42 +14,42 @@ print("done in: "+str(end-start))
 
 
 start = time.time()
-print("baseline_feature_engineering:")
+print("basic_features:")
 import feature_engineering.basic_features
 end = time.time()
 print("done in: "+str(end-start))
 
 
 start = time.time()
-print("baseline_feature_engineering:")
+print("cosine_distance:")
 import feature_engineering.cosine_distance
 end = time.time()
 print("done in: "+str(end-start))
 
 
 start = time.time()
-print("baseline_feature_engineering:")
+print("citation_graph_features:")
 import feature_engineering.citation_graph_features
 end = time.time()
 print("done in: "+str(end-start))
 
 
 start = time.time()
-print("baseline_feature_engineering:")
+print("networkx_bigraph:")
 import feature_engineering.networkx_bigraph
 end = time.time()
 print("done in: "+str(end-start))
 
 
 start = time.time()
-print("baseline_feature_engineering:")
+print("networkx_digraph:")
 import feature_engineering.networkx_digraph
 end = time.time()
 print("done in: "+str(end-start))
 
 
 start = time.time()
-print("baseline_feature_engineering:")
+print("networkx_bigraph_long:")
 import feature_engineering.networkx_bigraph_long
 end = time.time()
 print("done in: "+str(end-start))
