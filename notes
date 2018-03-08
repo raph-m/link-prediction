@@ -90,3 +90,5 @@ _ je change un peu le format du code. Maintenant c'est en mode projet donc tu do
 - network_x bigraph: ok
 - network_x digraph: ok
 - en train de faire le network_x bigraph_long pour calculer katz
+
+nohup python3 -u task_manager.py > log.txt 2>&1 &

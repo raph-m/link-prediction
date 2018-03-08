@@ -87,11 +87,11 @@ def callback(r):
 
 # computing features for training set
 
-pool = Pool(processes=2)
+pool = Pool()
 print("starting pool...")
 import time
 start = time.time()
-n_tasks = 200000
+n_tasks = 512
 tasks = []
 step = int(n / n_tasks)
 print(step)
@@ -127,7 +127,7 @@ print("size of data to process: " + str(n))
 katz = np.zeros(n)
 katz_2 = np.zeros(n)
 
-pool = Pool(processes=2)
+pool = Pool()
 print("starting pool...")
 n_tasks = 512
 tasks = []
