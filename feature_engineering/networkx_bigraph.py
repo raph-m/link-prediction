@@ -3,7 +3,7 @@ import pandas as pd
 from tqdm import tqdm
 import networkx as nx
 
-from code.feature_engineering.tools import lit_eval_nan_proof
+from feature_engineering.tools import lit_eval_nan_proof
 
 # this script computes some features by considering the bidirectional graph of citations: jaccard, adar,
 #  preferential_attachment, resource_allocation_index and common_neighbors

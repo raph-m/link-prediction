@@ -20,6 +20,7 @@ mkvirtualenv -p /usr/bin/python3.5 ml1
 sudo pip install pandas
 sudo pip install requests
 sudo pip install dotenv
+sudo pip install 
 git clone https://github.com/raph-m/safe_driver_prediction
 cd safe_driver_prediction/proj2
 python gdrive.py 1EQ0zE_2WLQdNIepWUjroPyGmi-dvN5KK ../../data.zip
@@ -65,3 +66,18 @@ python feature_engineering.py
 bashCommand = "cwm --rdf test.rdf --ntriples > test.nt"
 process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
 output, error = process.communicate()
+
+"""
+git clone https://github.com/raph-m/link-prediction
+cd link-prediction/
+mkdir data
+cd data
+wget https://www.kaggle.com/c/8421/download/public_baselines.py
+wget https://www.kaggle.com/c/8421/download/training_set.txt
+wget https://www.kaggle.com/c/8421/download/testing_set.txt
+wget https://www.kaggle.com/c/8421/download/random_predictions.csv
+wget https://www.kaggle.com/c/8421/download/node_information.csv
+sudo pip install nltk
+sudo pip install tqdm
+
+"""

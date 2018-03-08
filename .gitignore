@@ -104,7 +104,6 @@ ENV/
 /calculated_features/
 .idea/
 code/data_exploration/camboui.ipynb
-/code/data_exploration/.ipynb_checkpoints/
 /code/data_exploration/camboui.ipynb
 /code/data_exploration/data_exploration.ipynb
 /code/feature_engineering/camboui.ipynb
@@ -112,3 +111,4 @@ code/data_exploration/camboui.ipynb
 /code/feature_engineering/camboui.py
 /code/feature_engineering/camboui_network_x.ipynb
 /tests/multiprocessing_tuto.py
+/data_exploration/data_exploration.ipynb

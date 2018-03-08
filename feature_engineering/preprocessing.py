@@ -2,7 +2,7 @@ import nltk
 import pandas as pd
 from tqdm import tqdm
 
-from code.feature_engineering.tools import\
+from feature_engineering.tools import\
     text_element_wise_preprocess,\
     authors_element_wise_preprocess,\
     journal_element_wise_preprocess

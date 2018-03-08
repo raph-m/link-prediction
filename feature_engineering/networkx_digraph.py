@@ -3,7 +3,7 @@ import pandas as pd
 import networkx as nx
 from tqdm import tqdm
 
-from code.feature_engineering.tools import lit_eval_nan_proof
+from feature_engineering.tools import lit_eval_nan_proof
 
 # this script computes the features out_neighbors, in_neighbors and popularity by considering the directed
 # graph of citations. Popularity is the sum of in degrees of predecessors.

@@ -1,7 +1,7 @@
 import pandas as pd
 from tqdm import tqdm
 
-from code.feature_engineering.tools import lit_eval_nan_proof
+from feature_engineering.tools import lit_eval_nan_proof
 
 # this script produces the following features: overlap_title, date_diff and common_author
 # this is the script that you should run right after the pre-processing

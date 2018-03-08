@@ -4,7 +4,7 @@ import networkx as nx
 from multiprocessing import Pool
 from tqdm import tqdm
 
-from code.feature_engineering.tools import lit_eval_nan_proof
+from feature_engineering.tools import lit_eval_nan_proof
 
 # this script computes some features by considering the bidirectional graph of citations: katz
 # approx 100 hours to run it
