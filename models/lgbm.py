@@ -1,17 +1,19 @@
 import datetime
-from sklearn.model_selection import KFold
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
-import pandas as pd
-import numpy as np
+
 import lightgbm as lgb
-from tools import f1_score, binary_error, f1_score_lgbm
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import KFold
+
+from code.models.tools import f1_score, f1_score_lgbm
 
 # path
 path_to_data = "../../data/"
 path_to_submissions = "../../submissions/"
+path_to_stacking = "../../stacking"
+path_to_plots = "../../plots"
 
-# parameters
+# tuned hyperparameters
 params = {
     'task': 'train',
     'boosting_type': 'gbdt',
@@ -23,8 +25,8 @@ params = {
     'bagging_fraction': 0.6,
     'bagging_freq': 5,
     'verbose': 0,
-    "min_data_in_leaf": 2,
-    "max_depth": 200
+    "min_data_in_leaf": 6,
+    "max_depth": 150
 }
 # load data
 training = pd.read_csv(path_to_data + "training_features.txt")
@@ -76,13 +78,12 @@ X_train, Y_train = training_val[:, my_features_index].astype(float), training_va
 X_test = testing_val[:, my_features_index]
 
 now = datetime.datetime.now()
-print("date: "+str(now))
-print("features: "+str(my_features_string))
+print("date: " + str(now))
+print("features: " + str(my_features_string))
 print("model: Random Forest")
 print("parameters:")
 print(params)
 print("cross validation:")
-
 
 k = 5
 kf = KFold(k)
@@ -107,19 +108,27 @@ for train_index, test_index in kf.split(X_train):
     Y_pred = gbm.predict(X_train[test_index]).round()
     Y_pred_train = gbm.predict(X_train[train_index]).round()
     predictions[:, i] = gbm.predict(X_test)
-    print("train: "+str(f1_score(Y_train[train_index], Y_pred_train)))
-    print("test: "+str(f1_score(Y_train[test_index], Y_pred)))
+    print("train: " + str(f1_score(Y_train[train_index], Y_pred_train)))
+    print("test: " + str(f1_score(Y_train[test_index], Y_pred)))
 
     i += 1
 
+# save submission file
 Y_test = (np.sum(predictions, axis=1) > 2.5).astype(int)
-
 submission = pd.DataFrame(Y_test)
 submission.to_csv(
-    path_or_buf=path_to_submissions+"-".join(my_features_acronym)+".csv",
+    path_or_buf=path_to_submissions + "-".join(my_features_acronym) + "lgbm" + ".csv",
     index=True,
     index_label="id",
     header=["category"]
 )
-print("kaggle score: ")
 
+# save probabilities for stacking
+stacking_logits = np.sum(predictions, axis=1)
+submission = pd.DataFrame(stacking_logits)
+submission.to_csv(
+    path_or_buf=path_to_stacking + "-".join(my_features_acronym) + "lgbm" + ".csv",
+    index=True,
+    index_label="id",
+    header=["category"]
+)

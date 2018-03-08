@@ -9,9 +9,15 @@ from tools import f1_score
 # path
 path_to_data = "../../data/"
 path_to_submissions = "../../submissions/"
+path_to_stacking = "../../stacking"
+path_to_plots = "../../plots"
 
-# parameters
-parameters = {}
+# tuned hyperparameters
+parameters = {
+    'C': 0.1,
+    'gamma': 0.01,
+    'kernel': "rbf"
+}
 
 # load data
 training = pd.read_csv(path_to_data + "training_features.txt")
@@ -29,16 +35,26 @@ my_features_string = [
     "common_author",
     "journal_similarity",
     "overlapping_words_abstract",
-    # "cosine_distance",
-    "shortest_path"
+    "cosine_distance",
+    "shortest_path",
+    "jaccard",
+    "adar",
+    "preferential_attachment",
+    "resource_allocation_index",
+    "out_neighbors",
+    "in_neighbors",
+    "common_neighbors"
 ]
 my_features_index = []
+my_features_dic = {}
+my_features_acronym = ["_".join(list(map(lambda x: x[0], string.split('_')))) for string in my_features_string]
 
 target = 0
 for i in range(len(training.columns)):
     if training.columns[i] == "target":
         target = i
     elif training.columns[i] in my_features_string:
+        my_features_dic.update({len(my_features_index): training.columns[i]})
         my_features_index.append(i)
 
 # separating features and labels
@@ -55,7 +71,7 @@ print("parameters:")
 print(parameters)
 print("cross validation:")
 
-svm_classifier = svm.SVC(verbose=True)
+svm_classifier = svm.SVC(C=0.1, gamma=0.01, kernel="rbf")
 k = 5
 kf = KFold(k)
 predictions = np.zeros((X_test.shape[0], k))
@@ -70,11 +86,21 @@ for train_index, test_index in kf.split(X_train, Y_train):
     print("test: " + str(f1_score(Y_train[test_index], Y_pred)))
     i += 1
 
+# save submission file
 Y_test = (np.sum(predictions, axis=1) > 2.5).astype(int)
-
 submission = pd.DataFrame(Y_test)
 submission.to_csv(
     path_or_buf=path_to_submissions + "-".join(my_features_string) + "SVM.csv",
+    index=True,
+    index_label="id",
+    header=["category"]
+)
+
+# save probabilities for stacking
+stacking_logits = np.sum(predictions, axis=1)
+submission = pd.DataFrame(stacking_logits)
+submission.to_csv(
+    path_or_buf=path_to_stacking + "-".join(my_features_acronym) + "lgbm" + ".csv",
     index=True,
     index_label="id",
     header=["category"]
