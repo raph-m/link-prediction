@@ -10,6 +10,11 @@ from feature_engineering.tools import\
 # This script reads the data in node_information.csv and training_set and testing_set.csv, and creates the
 # files "nodes_preprocessed.csv", "training_new_index.txt" and "testing_new_index.txt".
 
+
+# pre-processing tools
+nltk.download('punkt')  # for tokenization
+nltk.download('stopwords')
+
 # progress bar for pandas
 tqdm.pandas(tqdm())
 
@@ -48,6 +53,6 @@ testing["my_index"] = testing["id1"].astype(str) + "|" + testing["id2"].astype(s
 testing.set_index("my_index", inplace=True)
 
 # save preprocessed data sets
-nodes.to_csv(path_to_data + "nodes_preprocessed.csv")
-training.to_csv(path_to_data + "training_new_index.txt")
-testing.to_csv(path_to_data + "testing_new_index.txt")
+# nodes.to_csv(path_to_data + "nodes_preprocessed.csv")
+# training.to_csv(path_to_data + "training_new_index.txt")
+# testing.to_csv(path_to_data + "testing_new_index.txt")
