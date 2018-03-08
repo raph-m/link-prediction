@@ -28,10 +28,6 @@ nltk.download('stopwords')
 stpwds = set(nltk.corpus.stopwords.words("english"))
 stemmer = nltk.stem.PorterStemmer()
 
-# pre-processing titles
-converter_dict = {'authors': lit_eval_nan_proof, 'journal': lit_eval_nan_proof,
-                  'title': lit_eval_nan_proof, 'abstract': lit_eval_nan_proof}
-
 nodes_header = ["id", "year", "title", "authors", "journal", "abstract"]
 nodes = pd.read_csv(path_to_data+"node_information.csv", names=nodes_header)
 nodes.set_index("id", inplace=True)
