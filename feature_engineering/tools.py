@@ -26,9 +26,6 @@ def lit_eval_nan_proof(string):
 def text_element_wise_preprocess(string):
     stpwds = set(nltk.corpus.stopwords.words("english"))
     stemmer = nltk.stem.PorterStemmer()
-    print("string: ")
-    print(string)
-    print(type(string))
     tokens = string.lower().split(" ")
     tokens_wo_stpwds = [stemmer.stem(token) for token in tokens if token not in stpwds]
     return tokens_wo_stpwds

@@ -70,13 +70,12 @@ output, error = process.communicate()
 """
 git clone https://github.com/raph-m/link-prediction
 cd link-prediction/
+# get and API token from kaggle (kaggle.json)
+sudo pip install kaggle
+mv kaggle.json .kaggle/
 mkdir data
 cd data
-wget https://www.kaggle.com/c/8421/download/public_baselines.py
-wget https://www.kaggle.com/c/8421/download/training_set.txt
-wget https://www.kaggle.com/c/8421/download/testing_set.txt
-wget https://www.kaggle.com/c/8421/download/random_predictions.csv
-wget https://www.kaggle.com/c/8421/download/node_information.csv
+kaggle competitions download -c link-prediction-challenge-tm-and-nlp
 sudo pip install nltk
 sudo pip install tqdm
 
