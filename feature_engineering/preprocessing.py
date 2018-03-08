@@ -2,13 +2,17 @@ import nltk
 import pandas as pd
 from tqdm import tqdm
 
-from code.feature_engineering.tools import\
+from feature_engineering.tools import\
     text_element_wise_preprocess,\
     authors_element_wise_preprocess,\
     journal_element_wise_preprocess
-
 # This script reads the data in node_information.csv and training_set and testing_set.csv, and creates the
 # files "nodes_preprocessed.csv", "training_new_index.txt" and "testing_new_index.txt".
+
+
+# pre-processing tools
+nltk.download('punkt')  # for tokenization
+nltk.download('stopwords')
 
 # progress bar for pandas
 tqdm.pandas(tqdm())
@@ -22,7 +26,6 @@ nltk.download('stopwords')
 stpwds = set(nltk.corpus.stopwords.words("english"))
 stemmer = nltk.stem.PorterStemmer()
 
-# pre-processing titles
 nodes_header = ["id", "year", "title", "authors", "journal", "abstract"]
 nodes = pd.read_csv(path_to_data+"node_information.csv", names=nodes_header)
 nodes.set_index("id", inplace=True)

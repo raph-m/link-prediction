@@ -5,7 +5,7 @@ import pandas as pd
 from tqdm import tqdm
 from gensim import corpora, models
 
-from code.feature_engineering.tools import lit_eval_nan_proof
+from feature_engineering.tools import lit_eval_nan_proof
 
 
 # this script adds the features score_1_2, score_2_1 and cosine_distance to the features csv files.

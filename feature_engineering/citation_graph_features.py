@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
-from code.feature_engineering.tools import lit_eval_nan_proof
+from feature_engineering.tools import lit_eval_nan_proof
 
 # this script adds the feature shortest_path to the files training_features and testing_features
 # this script takes approximately 1000 minutes to execute

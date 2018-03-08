@@ -4,7 +4,7 @@ from itertools import permutations
 import igraph
 import numpy as np
 import pandas as pd
-from code.feature_engineering.tools import lit_eval_nan_proof
+from feature_engineering.tools import lit_eval_nan_proof
 from tqdm import tqdm
 
 # progress bar for pandas
