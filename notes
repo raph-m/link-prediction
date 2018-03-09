@@ -92,3 +92,6 @@ _ je change un peu le format du code. Maintenant c'est en mode projet donc tu do
 - en train de faire le network_x bigraph_long pour calculer katz
 
 nohup python3 -u task_manager.py > log.txt 2>&1 &
+
+process en cours: 11023 et ça va dans log.txt
+11098

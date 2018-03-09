@@ -5,7 +5,7 @@ from sklearn.metrics import accuracy_score
 import pandas as pd
 import numpy as np
 
-from code.models.tools import f1_score
+from models.tools import f1_score
 
 # path
 path_to_data = "../../data/"

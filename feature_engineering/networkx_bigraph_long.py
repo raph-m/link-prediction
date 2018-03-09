@@ -7,7 +7,6 @@ from tqdm import tqdm
 from feature_engineering.tools import lit_eval_nan_proof
 
 # this script computes some features by considering the bidirectional graph of citations: katz
-# approx 100 hours to run it
 
 # progress bar for pandas
 tqdm.pandas(tqdm())
