@@ -72,40 +72,39 @@ for u in range(len(my_features_index)):
     best_train_score = 0.0
     best_index = 0
     for i, f in my_features_dic.items():
-        # separating features and labels
-        print("testing additional feature: " + f)
-        current_features = features_to_keep + [i]
+        if i not in features_to_keep:
+            # separating features and labels
+            print("testing additional feature: " + f)
+            current_features = features_to_keep + [i]
 
-        print(current_features)
+            X_train = training.values[:, current_features].astype(float)
 
-        X_train = training.values[:, current_features].astype(float)
+            RF = RandomForestClassifier(
+                n_estimators=parameters["n_estimators"],
+                criterion=parameters["criterion"],
+                max_depth=parameters["max_depth"],
+                min_samples_leaf=parameters["min_samples_leaf"],
+                bootstrap=parameters["bootstrap"],
+                n_jobs=parameters["n_jobs"]
+            )
+            k = 5
+            kf = KFold(k)
+            train_score = 0.0
+            test_score = 0.0
 
-        RF = RandomForestClassifier(
-            n_estimators=parameters["n_estimators"],
-            criterion=parameters["criterion"],
-            max_depth=parameters["max_depth"],
-            min_samples_leaf=parameters["min_samples_leaf"],
-            bootstrap=parameters["bootstrap"],
-            n_jobs=parameters["n_jobs"]
-        )
-        k = 5
-        kf = KFold(k)
-        train_score = 0.0
-        test_score = 0.0
+            for train_index, test_index in kf.split(X_train, Y_train):
+                RF.fit(X_train[train_index], Y_train[train_index])
+                Y_pred = RF.predict(X_train[test_index])
+                Y_pred_train = RF.predict(X_train[train_index])
+                train_score += f1_score(Y_train[train_index], Y_pred_train)
+                test_score += f1_score(Y_train[test_index], Y_pred)
 
-        for train_index, test_index in kf.split(X_train, Y_train):
-            RF.fit(X_train[train_index], Y_train[train_index])
-            Y_pred = RF.predict(X_train[test_index])
-            Y_pred_train = RF.predict(X_train[train_index])
-            train_score += f1_score(Y_train[train_index], Y_pred_train)
-            test_score += f1_score(Y_train[test_index], Y_pred)
+            train_score /= k
+            test_score /= k
 
-        train_score /= k
-        test_score /= k
-
-        if test_score > best_test_score:
-            best_index = i
-            best_train_score = train_score
+            if test_score > best_test_score:
+                best_index = i
+                best_train_score = train_score
 
         print("train score: "+str(train_score))
         print("test score: " + str(test_score))
