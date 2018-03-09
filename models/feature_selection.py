@@ -1,7 +1,6 @@
 from sklearn.model_selection import KFold
 from sklearn.ensemble import RandomForestClassifier
 import pandas as pd
-import numpy as np
 
 from models.tools import f1_score
 
@@ -106,9 +105,9 @@ for u in range(len(my_features_index)):
                 best_index = i
                 best_train_score = train_score
 
-        print("train score: "+str(train_score))
-        print("test score: " + str(test_score))
-        print("")
+            print("train score: "+str(train_score))
+            print("test score: " + str(test_score))
+            print("")
 
     print("for this round, the best feature was " + my_features_dic[best_index])
     print("the scores obtained were: ")
