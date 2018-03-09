@@ -113,3 +113,5 @@ code/data_exploration/camboui.ipynb
 /tests/multiprocessing_tuto.py
 /data_exploration/data_exploration.ipynb
 /models/feature_selection_2.ipynb
+/results/log.txt
+/log.txt

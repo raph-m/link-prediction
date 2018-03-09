@@ -104,12 +104,14 @@ for u in range(len(my_features_index)):
             if test_score > best_test_score:
                 best_index = i
                 best_train_score = train_score
+                best_test_score = test_score
 
             print("train score: "+str(train_score))
             print("test score: " + str(test_score))
             print("")
 
     print("for this round, the best feature was " + my_features_dic[best_index])
+    features_to_keep.append(best_index)
     print("the scores obtained were: ")
     print("train score: " + str(best_train_score))
     print("test score: " + str(best_test_score))

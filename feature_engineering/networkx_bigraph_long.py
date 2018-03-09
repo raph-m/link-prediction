@@ -42,7 +42,6 @@ beta_2 = 0.9
 def work(i0=None, n=None, is_training=True):
 
     print(i0)
-
     G = nx.Graph()
     G.add_nodes_from(nodes.index.values)
     G.add_edges_from(zip(training[training["target"] == 1]["id1"], training[training["target"] == 1]["id2"]))
@@ -50,16 +49,16 @@ def work(i0=None, n=None, is_training=True):
     ans = np.zeros(n)
     ans_2 = np.zeros(n)
 
-    for i in range(i0, i0+n):
+    for i in range(n):
         if is_training:
-            if training.at[str(id1[i]) + "|" + str(id2[i]), "target"] == 1:
-                G.remove_edge(id1[i], id2[i])
+            if training.at[str(id1[i0+i]) + "|" + str(id2[i0+i]), "target"] == 1:
+                G.remove_edge(id1[i0+i], id2[i0+i])
 
         katz_acc = 0.0
         katz_2_acc = 0.0
         counter = 0
         try:
-            iterator = nx.all_shortest_paths(G, source=id1[i], target=id2[i])
+            iterator = nx.all_shortest_paths(G, source=id1[i0+i], target=id2[i0+i])
             for p in iterator:
                 len_p = len(p)
                 katz_acc += len_p * (beta ** len_p)
@@ -72,11 +71,13 @@ def work(i0=None, n=None, is_training=True):
             ans_2[i] = -1
 
         if is_training:
-            if training.at[str(id1[i]) + "|" + str(id2[i]), "target"] == 1:
-                G.add_edge(id1[i], id2[i])
+            if training.at[str(id1[i0+i]) + "|" + str(id2[i0+i]), "target"] == 1:
+                G.add_edge(id1[i0+i], id2[i0+i])
 
         ans[i] = katz_acc
         ans_2[i] = katz_2_acc
+
+    print(i0)
 
     return ans, ans_2, i0
 
@@ -90,7 +91,7 @@ pool = Pool()
 print("starting pool...")
 import time
 start = time.time()
-n_tasks = 512
+n_tasks = 60000
 tasks = []
 step = int(n / n_tasks)
 print(step)
