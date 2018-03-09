@@ -18,7 +18,8 @@ parameters = {
     "criterion": "entropy",  # default = gini
     "max_depth": 9,
     "min_samples_leaf": 10,
-    "bootstrap": True
+    "bootstrap": True,
+    "n_jobs": -1
 }
 
 # load data
@@ -77,21 +78,24 @@ for i, f in my_features_dic.items():
     X_train = training.values[:, current_features].astype(float)
     X_test = testing.values[:, current_features].astype(float)
 
-    RF = RandomForestClassifier(n_estimators=parameters["n_estimators"])
+    RF = RandomForestClassifier(
+        n_estimators=parameters["n_estimators"],
+        criterion=parameters["criterion"],
+        max_depth=parameters["max_depth"],
+        min_samples_leaf=parameters["min_samples_leaf"],
+        bootstrap=parameters["bootstrap"],
+        n_jobs=parameters["n_jobs"]
+    )
     k = 2
     kf = KFold(k)
     predictions = np.zeros((X_test.shape[0], k))
-    i = 0
 
     for train_index, test_index in kf.split(X_train, Y_train):
         RF.fit(X_train[train_index], Y_train[train_index])
         Y_pred = RF.predict(X_train[test_index])
         Y_pred_train = RF.predict(X_train[train_index])
-        predictions[:, i] = RF.predict(X_test)
         print("train: " + str(f1_score(Y_train[train_index], Y_pred_train)))
         print("test: " + str(f1_score(Y_train[test_index], Y_pred)))
-        i += 1
-
 
 # # print feature importances
 # for i in range(len(RF.feature_importances_)):
