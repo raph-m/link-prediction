@@ -91,7 +91,7 @@ pool = Pool()
 print("starting pool...")
 import time
 start = time.time()
-n_tasks = 60000
+n_tasks = 512
 tasks = []
 step = int(n / n_tasks)
 print(step)
