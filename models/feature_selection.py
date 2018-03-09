@@ -24,9 +24,7 @@ parameters = {
 
 # load data
 training = pd.read_csv(path_to_data + "training_features.txt")
-testing = pd.read_csv(path_to_data + "testing_features.txt")
 del training["my_index"]
-del testing["my_index"]
 
 # replace inf in shortest_path with -1
 
@@ -49,8 +47,6 @@ my_features_string = [
 ]
 my_features_index = []
 my_features_dic = {}
-my_features_index_test = []
-my_features_dic_test = {}
 my_features_acronym = ["_".join(list(map(lambda x: x[0], string.split('_')))) for string in my_features_string]
 
 target = 0
@@ -76,7 +72,6 @@ for i, f in my_features_dic.items():
     print(current_features)
 
     X_train = training.values[:, current_features].astype(float)
-    X_test = testing.values[:, current_features].astype(float)
 
     RF = RandomForestClassifier(
         n_estimators=parameters["n_estimators"],
@@ -88,7 +83,6 @@ for i, f in my_features_dic.items():
     )
     k = 2
     kf = KFold(k)
-    predictions = np.zeros((X_test.shape[0], k))
 
     for train_index, test_index in kf.split(X_train, Y_train):
         RF.fit(X_train[train_index], Y_train[train_index])
