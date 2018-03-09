@@ -42,7 +42,7 @@ beta_2 = 0.9
 def work(i0=None, n=None, is_training=True):
 
     print(i0)
-    G = nx.Graph()
+    G = nx.DiGraph()
     G.add_nodes_from(nodes.index.values)
     G.add_edges_from(zip(training[training["target"] == 1]["id1"], training[training["target"] == 1]["id2"]))
 
@@ -91,7 +91,7 @@ pool = Pool()
 print("starting pool...")
 import time
 start = time.time()
-n_tasks = 60000
+n_tasks = 2000
 tasks = []
 step = int(n / n_tasks)
 print(step)
@@ -129,7 +129,7 @@ katz_2 = np.zeros(n)
 
 pool = Pool()
 print("starting pool...")
-n_tasks = 512
+n_tasks = 2000
 tasks = []
 step = int(n / n_tasks)
 for i0 in range(n_tasks):
