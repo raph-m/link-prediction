@@ -29,26 +29,30 @@ del training["my_index"]
 training['shortest_path'] = training['shortest_path'].replace([float('inf')], [-1])
 
 my_features_string = [
-    "date_diff",
-    "overlap_title",
-    "common_author",
-    "score_1_2",
-    "score_2_1",
-    "cosine_distance",
-    "journal_similarity",
-    "overlapping_words_abstract",
-    "jaccard",
-    "adar",
-    "preferential_attachment",
-    "resource_allocation_index",
-    "out_neighbors",
-    "in_neighbors",
-    "common_neighbors",
-    "shortest_path",
-    "popularity",
-    "katz",
-    "katz_2"
+    # "date_diff",
+    # "overlap_title",
+    # "common_author",
+    # "score_1_2",
+    # "score_2_1",
+    # "cosine_distance",
+    # "journal_similarity",
+    # "overlapping_words_abstract",
+    # "jaccard",
+    # "adar",
+    # "preferential_attachment",
+    # "resource_allocation_index",
+    # "out_neighbors",
+    # "in_neighbors",
+    # "common_neighbors",
+    # "shortest_path",
+    # "popularity",
+    # "katz",
+    # "katz_2",
+    "common_successors",
+    "common_predecessors",
+    "paths_of_length_one"
 ]
+
 my_features_index = []
 my_features_dic = {}
 my_features_acronym = ["_".join(list(map(lambda x: x[0], string.split('_')))) for string in my_features_string]
@@ -62,7 +66,7 @@ Y_train = training.values[:, target].astype(int)
 
 del training["target"]
 
-already_computed_names = ['common_neighbors', 'cosine_distance', 'date_diff']
+already_computed_names = []  # ['common_neighbors', 'cosine_distance', 'date_diff']
 already_computed = []
 
 for i in range(len(training.columns)):
