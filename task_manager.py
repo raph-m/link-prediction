@@ -9,11 +9,11 @@ testing.set_index("my_index", inplace=True)
 
 # create new csv file with only features so we can download faster
 for col in training.columns:
-    if col != ["katz", "katz_2"]:
+    if col not in ["katz", "katz_2"]:
         del training[col]
 
 for col in testing.columns:
-    if col != ["katz", "katz_2"]:
+    if col not in ["katz", "katz_2"]:
         del testing[col]
 
 print("training head: ")
