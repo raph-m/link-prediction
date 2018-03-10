@@ -95,7 +95,15 @@ print("parameters:")
 print(parameters)
 print("cross validation:")
 
-RF = RandomForestClassifier(n_estimators=parameters["n_estimators"])
+
+RF = RandomForestClassifier(
+    n_estimators=parameters["n_estimators"],
+    criterion=parameters["criterion"],
+    max_depth=parameters["max_depth"],
+    min_samples_leaf=parameters["min_samples_leaf"],
+    bootstrap=parameters["bootstrap"],
+    n_jobs=parameters["n_jobs"]
+)
 k = 5
 kf = KFold(k)
 predictions = np.zeros((X_test.shape[0], k))
