@@ -20,7 +20,7 @@ parameters = {
     "max_depth": 9,
     "min_samples_leaf": 10,
     "bootstrap": True,
-    "n_jobs": 2
+    "n_jobs": -1
 }
 
 # load data
@@ -34,14 +34,14 @@ training['shortest_path'] = training['shortest_path'].replace([float('inf')], [-
 testing['shortest_path'] = testing['shortest_path'].replace([float('inf')], [-1])
 
 my_features_string = [
-    "date_diff",
-    "overlap_title",
-    "common_author",
-    "score_1_2",
-    "score_2_1",
-    "cosine_distance",
-    "journal_similarity",
-    "overlapping_words_abstract",
+    # "date_diff",
+    # "overlap_title",
+    # "common_author",
+    # "score_1_2",
+    # "score_2_1",
+    # "cosine_distance",
+    # "journal_similarity",
+    # "overlapping_words_abstract",
     "jaccard",
     "adar",
     "preferential_attachment",
@@ -76,6 +76,8 @@ training_val = training.values
 testing_val = testing.values
 X_train = training_val[:, my_features_index].astype(float)
 X_test = testing_val[:, my_features_index]
+del training_val
+del testing_val
 
 now = datetime.datetime.now()
 print("date: " + str(now))
@@ -91,15 +93,19 @@ kf = KFold(k)
 predictions = np.zeros((X_test.shape[0], k))
 i = 0
 
+test_score = 0.0
 for train_index, test_index in kf.split(X_train, Y_train):
     RF.fit(X_train[train_index], Y_train[train_index])
     Y_pred = RF.predict(X_train[test_index])
     Y_pred_train = RF.predict(X_train[train_index])
     predictions[:, i] = RF.predict(X_test)
+    current_test_score = f1_score(Y_train[test_index], Y_pred)
+    test_score += current_test_score
     print("train: " + str(f1_score(Y_train[train_index], Y_pred_train)))
-    print("test: " + str(f1_score(Y_train[test_index], Y_pred)))
+    print("test: " + str(current_test_score))
     i += 1
 
+print("CV test score: "+str(test_score/k))
 # save submission file
 Y_test = (np.sum(predictions, axis=1) > 2.5).astype(int)
 submission = pd.DataFrame(Y_test)
@@ -120,6 +126,6 @@ submission.to_csv(
     header=["category"]
 )
 
-# print feature importances
+# print feature importance
 for i in range(len(RF.feature_importances_)):
     print(str(my_features_dic[i]) + ": " + str(RF.feature_importances_[i]))

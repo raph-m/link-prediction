@@ -61,8 +61,8 @@ def work(i0=None, n=None, is_training=True):
             iterator = nx.all_shortest_paths(G, source=id1[i0+i], target=id2[i0+i])
             for p in iterator:
                 len_p = len(p)
-                katz_acc += len_p * (beta ** len_p)
-                katz_2_acc += len_p * (beta_2 ** len_p)
+                katz_acc += (beta ** len_p)
+                katz_2_acc += (beta_2 ** len_p)
                 counter += 1
                 if counter >= breaking_point:
                     break

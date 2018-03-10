@@ -118,3 +118,4 @@ code/data_exploration/camboui.ipynb
 /bigraph_from_root.py
 /illustrate_report.ipynb
 /camboui.py
+*.csv
