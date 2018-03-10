@@ -11,8 +11,10 @@ testing.set_index("my_index", inplace=True)
 for col in training.columns:
     if col != ["katz", "katz_2"]:
         del training[col]
-        if col != "target":
-            del testing[col]
+
+for col in testing.columns:
+    if col != ["katz", "katz_2"]:
+        del testing[col]
 
 print("training head: ")
 print(training.head())
