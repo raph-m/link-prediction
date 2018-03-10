@@ -95,7 +95,7 @@ nohup python3 -u task_manager.py > log.txt 2>&1 &
 
 https://drive.google.com/file/d/1RetpAekytXLNwQLUfJhHxamGHcOd_7j8/view?usp=sharing
 
-18043 sur le cloud
+25824 sur le cloud
 
 371 460 dans le dernier tail log.txt à 22H35.
 

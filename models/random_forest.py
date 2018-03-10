@@ -28,24 +28,25 @@ training = pd.read_csv(path_to_data + "training_features.txt")
 testing = pd.read_csv(path_to_data + "testing_features.txt")
 
 del training["my_index"]
+del testing["my_index"]
 
 # replace inf in shortest_path with -1
 training['shortest_path'] = training['shortest_path'].replace([float('inf')], [-1])
 testing['shortest_path'] = testing['shortest_path'].replace([float('inf')], [-1])
 
 my_features_string = [
-    # "date_diff",
-    # "overlap_title",
-    # "common_author",
+    "date_diff",
+    "overlap_title",
+    "common_author",
     # "score_1_2",
     # "score_2_1",
-    # "cosine_distance",
+    "cosine_distance",
     # "journal_similarity",
     # "overlapping_words_abstract",
-    "jaccard",
-    "adar",
+    # "jaccard",
+    # "adar",
     "preferential_attachment",
-    "resource_allocation_index",
+    # "resource_allocation_index",
     "out_neighbors",
     "in_neighbors",
     "common_neighbors",
@@ -57,6 +58,7 @@ my_features_string = [
 my_features_index = []
 my_features_dic = {}
 my_features_acronym = ["_".join(list(map(lambda x: x[0], string.split('_')))) for string in my_features_string]
+print(my_features_acronym)
 
 target = 0
 for i in range(len(training.columns)):
@@ -78,6 +80,9 @@ X_train = training_val[:, my_features_index].astype(float)
 X_test = testing_val[:, my_features_index]
 del training_val
 del testing_val
+
+print(training.head())
+print(testing.head())
 
 now = datetime.datetime.now()
 print("date: " + str(now))

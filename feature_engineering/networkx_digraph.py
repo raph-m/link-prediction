@@ -38,6 +38,9 @@ n = len(id1)
 out_neighbors = np.zeros(n)
 in_neighbors = np.zeros(n)
 popularity = np.zeros(n)
+common_predecessors = np.zeros(n)
+common_successors = np.zeros(n)
+paths_of_length_one = np.zeros(n)
 
 # computing features for training set
 for i in tqdm(range(len(id1))):
@@ -47,12 +50,34 @@ for i in tqdm(range(len(id1))):
     in_neighbors[i] = G.in_degree(id2[i])
     out_neighbors[i] = G.out_degree(id1[i])
 
-    predecessors = G.predecessors(id2[i])
-    pop = 0
-    for p in predecessors:
-        pop += G.in_degree(p)
+    current_common_successors = 0
+    current_common_predecessors = 0
+    current_paths_of_length_one = 0
 
+    predecessors_2 = G.predecessors(id2[i])
+    predecessors_1 = G.predecessors(id1[i])
+
+    pop = 0
+    for p in predecessors_2:
+        pop += G.in_degree(p)
+        if p in predecessors_1:
+            current_common_predecessors += 1
     popularity[i] = pop
+
+    successors_2 = G.successors(id2[i])
+    successors_1 = G.successors(id1[i])
+
+    for p in successors_1:
+        if p in successors_2:
+            current_common_successors += 1
+
+    for p in successors_1:
+        if p in predecessors_2:
+            current_paths_of_length_one += 1
+
+    common_successors[i] = current_common_successors
+    common_predecessors[i] = current_common_predecessors
+    paths_of_length_one[i] = current_paths_of_length_one
 
     if training.at[str(id1[i]) + "|" + str(id2[i]), "target"] == 1:
         G.add_edge(id1[i], id2[i])
@@ -61,6 +86,10 @@ for i in tqdm(range(len(id1))):
 training["out_neighbors"] = out_neighbors
 training["in_neighbors"] = in_neighbors
 training["popularity"] = popularity
+training["common_successors"] = out_neighbors
+training["common_predecessors"] = in_neighbors
+training["paths_of_length_one"] = popularity
+
 
 # IDs for training set
 id1 = testing['id1'].values
@@ -78,10 +107,34 @@ for i in tqdm(range(len(id1))):
     in_neighbors[i] = G.in_degree(id2[i])
     out_neighbors[i] = G.out_degree(id1[i])
 
-    predecessors = G.predecessors(id2[i])
+    current_common_successors = 0
+    current_common_predecessors = 0
+    current_paths_of_length_one = 0
+
+    predecessors_2 = G.predecessors(id2[i])
+    predecessors_1 = G.predecessors(id1[i])
+
     pop = 0
-    for p in predecessors:
+    for p in predecessors_2:
         pop += G.in_degree(p)
+        if p in predecessors_1:
+            current_common_predecessors += 1
+    popularity[i] = pop
+
+    successors_2 = G.successors(id2[i])
+    successors_1 = G.successors(id1[i])
+
+    for p in successors_1:
+        if p in successors_2:
+            current_common_successors += 1
+
+    for p in successors_1:
+        if p in predecessors_2:
+            current_paths_of_length_one += 1
+
+    common_successors[i] = current_common_successors
+    common_predecessors[i] = current_common_predecessors
+    paths_of_length_one[i] = current_paths_of_length_one
 
     popularity[i] = pop
 
@@ -90,6 +143,9 @@ for i in tqdm(range(len(id1))):
 testing["out_neighbors"] = out_neighbors
 testing["in_neighbors"] = in_neighbors
 testing["popularity"] = popularity
+testing["common_successors"] = out_neighbors
+testing["common_predecessors"] = in_neighbors
+testing["paths_of_length_one"] = popularity
 
 # save data-frame
 training.to_csv(path_to_data + "training_features.txt")

@@ -46,7 +46,7 @@ my_features_string = [
     "common_neighbors",
     "shortest_path",
     "popularity",
-    "katz"
+    "katz",
     "katz_2"
 ]
 my_features_index = []
@@ -93,7 +93,6 @@ for u in range(len(my_features_index)):
                 current_features = features_to_keep + [i]
 
                 X_train = training.values[:, current_features]
-                print(X_train)
 
                 RF = RandomForestClassifier(
                     n_estimators=parameters["n_estimators"],
