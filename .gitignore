@@ -119,3 +119,4 @@ code/data_exploration/camboui.ipynb
 /illustrate_report.ipynb
 /camboui.py
 *.csv
+results/*
