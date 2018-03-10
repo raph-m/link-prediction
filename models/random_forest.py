@@ -17,8 +17,8 @@ path_to_plots = "plots/"
 parameters = {
     "n_estimators": 150,
     "criterion": "entropy",  # default = gini
-    "max_depth": 9,
-    "min_samples_leaf": 10,
+    "max_depth": 15,
+    "min_samples_leaf": 4,
     "bootstrap": True,
     "n_jobs": -1
 }
