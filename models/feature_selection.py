@@ -62,70 +62,77 @@ Y_train = training.values[:, target].astype(int)
 
 del training["target"]
 
+already_computed_names = ['common_neighbors', 'cosine_distance', 'date_diff']
+already_computed = []
+
 for i in range(len(training.columns)):
     if training.columns[i] in my_features_string:
         my_features_dic.update({i: training.columns[i]})
         my_features_index.append(i)
+    if training.columns[i] in already_computed_names:
+        already_computed.append(i)
 
-already_computed = ['common_neighbors', 'cosine_distance', 'date_diff']
 features_to_keep = []
 for u in range(len(my_features_index)):
-	try:
-		features_to_keep.append(already_computed[i])
-	except:
-		features_to_keep_names = [my_features_dic[i] for i in features_to_keep]
-		print("new round !")
-		print("u = " + str(u) + ", current features are: " + str(features_to_keep_names))
-		best_test_score = 0.0
-		best_train_score = 0.0
-		best_index = 0
-		for i, f in my_features_dic.items():
-		    if i not in features_to_keep:
-		        # separating features and labels
-		        print("testing additional feature: " + f)
-		        current_features = features_to_keep + [i]
 
-		        X_train = training.values[:, current_features]
-		        print(X_train)
+    try:
+        features_to_keep.append(already_computed[u])
+        print("added already computed feature " + str(my_features_dic[already_computed[u]]))
+    except:
 
-		        RF = RandomForestClassifier(
-		            n_estimators=parameters["n_estimators"],
-		            criterion=parameters["criterion"],
-		            max_depth=parameters["max_depth"],
-		            min_samples_leaf=parameters["min_samples_leaf"],
-		            bootstrap=parameters["bootstrap"],
-		            n_jobs=parameters["n_jobs"]
-		        )
-		        k = 5
-		        kf = KFold(k)
-		        train_score = 0.0
-		        test_score = 0.0
+        features_to_keep_names = [my_features_dic[i] for i in features_to_keep]
+        print("new round !")
+        print("u = " + str(u) + ", current features are: " + str(features_to_keep_names))
+        best_test_score = 0.0
+        best_train_score = 0.0
+        best_index = 0
+        for i, f in my_features_dic.items():
+            if i not in features_to_keep:
+                # separating features and labels
+                print("testing additional feature: " + f)
+                current_features = features_to_keep + [i]
 
-		        for train_index, test_index in kf.split(X_train, Y_train):
-		            RF.fit(X_train[train_index], Y_train[train_index])
-		            Y_pred = RF.predict(X_train[test_index])
-		            Y_pred_train = RF.predict(X_train[train_index])
-		            train_score += f1_score(Y_train[train_index], Y_pred_train)
-		            test_score += f1_score(Y_train[test_index], Y_pred)
+                X_train = training.values[:, current_features]
+                print(X_train)
 
-		        train_score /= k
-		        test_score /= k
+                RF = RandomForestClassifier(
+                    n_estimators=parameters["n_estimators"],
+                    criterion=parameters["criterion"],
+                    max_depth=parameters["max_depth"],
+                    min_samples_leaf=parameters["min_samples_leaf"],
+                    bootstrap=parameters["bootstrap"],
+                    n_jobs=parameters["n_jobs"]
+                )
+                k = 5
+                kf = KFold(k)
+                train_score = 0.0
+                test_score = 0.0
 
-		        if test_score > best_test_score:
-		            best_index = i
-		            best_train_score = train_score
-		            best_test_score = test_score
+                for train_index, test_index in kf.split(X_train, Y_train):
+                    RF.fit(X_train[train_index], Y_train[train_index])
+                    Y_pred = RF.predict(X_train[test_index])
+                    Y_pred_train = RF.predict(X_train[train_index])
+                    train_score += f1_score(Y_train[train_index], Y_pred_train)
+                    test_score += f1_score(Y_train[test_index], Y_pred)
 
-		        print("train score: "+str(train_score))
-		        print("test score: " + str(test_score))
-		        print("")
+                train_score /= k
+                test_score /= k
 
-		print("for this round, the best feature was " + my_features_dic[best_index])
-		features_to_keep.append(best_index)
-		print("the scores obtained were: ")
-		print("train score: " + str(best_train_score))
-		print("test score: " + str(best_test_score))
-		print("\n\n\n\n")
+                if test_score > best_test_score:
+                    best_index = i
+                    best_train_score = train_score
+                    best_test_score = test_score
+
+                print("train score: "+str(train_score))
+                print("test score: " + str(test_score))
+                print("")
+
+        print("for this round, the best feature was " + my_features_dic[best_index])
+        features_to_keep.append(best_index)
+        print("the scores obtained were: ")
+        print("train score: " + str(best_train_score))
+        print("test score: " + str(best_test_score))
+        print("\n\n\n\n")
 
 # # print feature importances
 # for i in range(len(RF.feature_importances_)):
