@@ -52,8 +52,11 @@ my_features_string = [
     "common_neighbors",
     "shortest_path",
     "popularity",
-    "katz"
-    "katz_2"
+    "common_successors",
+    "common_predecessors",
+    "paths_of_length_one"
+    # "katz"
+    # "katz_2"
 ]
 my_features_index = []
 my_features_dic = {}
