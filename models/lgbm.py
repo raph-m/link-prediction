@@ -35,28 +35,28 @@ del training["my_index"]
 del testing["my_index"]
 
 my_features_string = [
-    "overlap_title",
+    # "overlap_title",
     "date_diff",
-    "common_author",
-    "journal_similarity",
-    "overlapping_words_abstract",
-    "cosine_distance",
-    "shortest_path",
+    # "common_author",
+    # "journal_similarity",
+    # "overlapping_words_abstract",
+    # "cosine_distance",
+    # "shortest_path",
     # "author_min_shortest_path",
     # "author_max_shortest_path",
     # "author_sum_shortest_path",
     # "author_mean_shortest_path",
     # "author_out_degree_sum_source",
-    "author_out_degree_mean_source",
+    # "author_out_degree_mean_source",
     # "author_in_degree_sum_target",
-    "author_in_degree_mean_target",
-    "jaccard",
-    "adar",
-    "preferential_attachment",
-    "resource_allocation_index",
-    "out_neighbors",
-    "in_neighbors",
-    "common_neighbors"
+    # "author_in_degree_mean_target",
+    # "jaccard",
+    # "adar",
+    # "preferential_attachment",
+    # "resource_allocation_index",
+    # "out_neighbors",
+    # "in_neighbors",
+    # "common_neighbors"
 ]
 
 my_features_index = []

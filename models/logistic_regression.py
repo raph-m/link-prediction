@@ -4,12 +4,12 @@ import pandas as pd
 from sklearn.linear_model import LogisticRegressionCV
 from sklearn.model_selection import KFold
 
-from tools import f1_score
+from models.tools import f1_score
 
 
 # path
-path_to_data = "../../data/"
-path_to_submissions = "../../submissions/"
+path_to_data = "data/"
+path_to_submissions = "submissions/"
 
 # parameters
 parameters = {
@@ -29,27 +29,46 @@ training['shortest_path'] = training['shortest_path'].replace([float('inf')], [-
 testing['shortest_path'] = testing['shortest_path'].replace([float('inf')], [-1])
 
 my_features_string = [
-    "overlap_title",
     "date_diff",
+    "overlap_title",
     "common_author",
-    "journal_similarity",
-    "overlapping_words_abstract",
+    "score_1_2",
+    # "score_2_1",
     # "cosine_distance",
-    "shortest_path"
+    # "journal_similarity",
+    # "overlapping_words_abstract",
+    # "jaccard",
+    # "adar",
+    # "preferential_attachment",
+    # "resource_allocation_index",
+    # "out_neighbors",
+    # "in_neighbors",
+    # "common_neighbors",
+    "shortest_path",
+    "popularity"
 ]
 my_features_index = []
+my_features_dic = {}
+my_features_acronym = ["_".join(list(map(lambda x: x[0], string.split('_')))) for string in my_features_string]
 
 target = 0
 for i in range(len(training.columns)):
     if training.columns[i] == "target":
         target = i
-    elif training.columns[i] in my_features_string:
+
+Y_train = training.values[:, target].astype(int)
+
+del training["target"]
+
+for i in range(len(training.columns)):
+    if training.columns[i] in my_features_string:
+        my_features_dic.update({i: training.columns[i]})
         my_features_index.append(i)
         
 # separating features and labels
 training_val = training.values
 testing_val = testing.values
-X_train, Y_train = training_val[:, my_features_index].astype(float), training_val[:, target].astype(int)
+X_train = training_val[:, my_features_index].astype(float)
 X_test = testing_val[:, my_features_index]
 
 now = datetime.datetime.now()
@@ -79,10 +98,10 @@ for train_index, test_index in kf.split(X_train, Y_train):
 
 Y_test = (np.sum(predictions, axis=1) > 2.5).astype(int)
 
-submission = pd.DataFrame(Y_test)
-submission.to_csv(
-    path_or_buf=path_to_submissions+"-".join(my_features_string)+"LogReg.csv",
-    index=True,
-    index_label="id",
-    header=["category"]
-)
+# submission = pd.DataFrame(Y_test)
+# submission.to_csv(
+#     path_or_buf=path_to_submissions+"-".join(my_features_string)+"LogReg.csv",
+#     index=True,
+#     index_label="id",
+#     header=["category"]
+# )

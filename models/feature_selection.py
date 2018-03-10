@@ -18,7 +18,7 @@ parameters = {
     "max_depth": 9,
     "min_samples_leaf": 10,
     "bootstrap": True,
-    "n_jobs": -1
+    "n_jobs": 2
 }
 
 # load data
@@ -26,10 +26,11 @@ training = pd.read_csv(path_to_data + "training_features.txt")
 del training["my_index"]
 
 # replace inf in shortest_path with -1
+training['shortest_path'] = training['shortest_path'].replace([float('inf')], [-1])
 
 my_features_string = [
-    "overlap_title",
     "date_diff",
+    "overlap_title",
     "common_author",
     "score_1_2",
     "score_2_1",
@@ -42,7 +43,11 @@ my_features_string = [
     "resource_allocation_index",
     "out_neighbors",
     "in_neighbors",
-    "common_neighbors"
+    "common_neighbors",
+    "shortest_path",
+    "popularity",
+    "katz"
+    "katz_2"
 ]
 my_features_index = []
 my_features_dic = {}
@@ -59,7 +64,7 @@ del training["target"]
 
 for i in range(len(training.columns)):
     if training.columns[i] in my_features_string:
-        my_features_dic.update({len(my_features_index): training.columns[i]})
+        my_features_dic.update({i: training.columns[i]})
         my_features_index.append(i)
 
 features_to_keep = []
@@ -76,7 +81,8 @@ for u in range(len(my_features_index)):
             print("testing additional feature: " + f)
             current_features = features_to_keep + [i]
 
-            X_train = training.values[:, current_features].astype(float)
+            X_train = training.values[:, current_features]
+            print(X_train)
 
             RF = RandomForestClassifier(
                 n_estimators=parameters["n_estimators"],

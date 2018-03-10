@@ -1,59 +1,74 @@
 import warnings
-import pandas as pd
 from lightgbm import LGBMClassifier
 from sklearn.model_selection import GridSearchCV
-
+import pandas as pd
 
 # deactivate deprecation warnings
 warnings.simplefilter("ignore", DeprecationWarning)
 
+n_jobs = 2
+
 # path
-path_to_data = "../../../data/"
-path_to_submissions = "../../../submissions/"
-path_to_plots = "../../plots"
+path_to_data = "data/"
+path_to_submissions = "submissions/"
+path_to_stacking = "stacking/"
+path_to_plots = "plots/"
+
 
 # load data
 training = pd.read_csv(path_to_data + "training_features.txt")
 testing = pd.read_csv(path_to_data + "testing_features.txt")
+
 del training["my_index"]
-del testing["my_index"]
 
 # replace inf in shortest_path with -1
 training['shortest_path'] = training['shortest_path'].replace([float('inf')], [-1])
 testing['shortest_path'] = testing['shortest_path'].replace([float('inf')], [-1])
 
 my_features_string = [
-    "overlap_title",
     "date_diff",
+    "overlap_title",
     "common_author",
-    "journal_similarity",
-    "overlapping_words_abstract",
-    "cosine_distance",
-    "shortest_path",
-    "jaccard",
+    "score_1_2",
+    # "score_2_1",
+    # "cosine_distance",
+    # "journal_similarity",
+    # "overlapping_words_abstract",
+    # "jaccard",
     "adar",
-    "preferential_attachment",
-    "resource_allocation_index",
-    "out_neighbors",
-    "in_neighbors",
-    "common_neighbors"
+    # "preferential_attachment",
+    # "resource_allocation_index",
+    # "out_neighbors",
+    # "in_neighbors",
+    # "common_neighbors",
+    # "shortest_path",
+    # "popularity",
+    # "katz"
+    # "katz_2"
 ]
 my_features_index = []
 my_features_dic = {}
+my_features_acronym = ["_".join(list(map(lambda x: x[0], string.split('_')))) for string in my_features_string]
 
 target = 0
 for i in range(len(training.columns)):
     if training.columns[i] == "target":
         target = i
-    elif training.columns[i] in my_features_string:
-        my_features_dic.update({len(my_features_index): training.columns[i]})
-        my_features_index.append(i)
 
+Y_train = training.values[:, target].astype(int)
+
+del training["target"]
+
+for i in range(len(training.columns)):
+    if training.columns[i] in my_features_string:
+        my_features_dic.update({i: training.columns[i]})
+        my_features_index.append(i)
 # separating features and labels
 training_val = training.values
 testing_val = testing.values
-X_train, Y_train = training_val[:, my_features_index].astype(float), training_val[:, target].astype(int)
+X_train = training_val[:, my_features_index].astype(float)
 X_test = testing_val[:, my_features_index]
+
 
 # GridSearchCV
 
@@ -82,6 +97,7 @@ grid_lgbm = GridSearchCV(gbm,
                          scoring=metrics,
                          refit='f1',
                          cv=5,
-                         n_jobs=2)
+                         n_jobs=n_jobs
+                         )
 grid_lgbm.fit(X_train, Y_train, verbose=-1)
 print("GridSearch best parameters", grid_lgbm.best_params_)
