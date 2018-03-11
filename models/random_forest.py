@@ -17,8 +17,8 @@ path_to_plots = "plots/"
 parameters = {
     "n_estimators": 150,
     "criterion": "entropy",  # default = gini
-    "max_depth": 15,  # 9
-    "min_samples_leaf": 4,  # 10
+    "max_depth": 20,  # 9
+    "min_samples_leaf": 10,  # 10
     "bootstrap": True,
     "n_jobs": -1
 }
@@ -38,15 +38,15 @@ my_features_string = [
     "date_diff",
     "overlap_title",
     "common_author",
-    "score_1_2",
-    "score_2_1",
+    # "score_1_2",
+    # "score_2_1",
     "cosine_distance",
     "journal_similarity",
-    "overlapping_words_abstract",
-    "jaccard",
-    "adar",
+    # "overlapping_words_abstract",
+    # "jaccard",
+    # "adar",
     "preferential_attachment",
-    "resource_allocation_index",
+    # "resource_allocation_index",
     "out_neighbors",
     "in_neighbors",
     "common_neighbors",
@@ -55,8 +55,8 @@ my_features_string = [
     "common_successors",
     "common_predecessors",
     "paths_of_length_one"
-    "katz"
-    "katz_2"
+    # "katz"
+    # "katz_2"
 ]
 my_features_index = []
 my_features_dic = {}
@@ -140,7 +140,7 @@ submission.to_csv(
 stacking_logits_test = np.sum(predictions_test, axis=1)
 stacking_test = pd.DataFrame(stacking_logits_test)
 stacking_test.to_csv(
-    path_or_buf=path_to_stacking + "rf_test" + ".csv",
+    path_or_buf=path_to_stacking + "rf_test_2" + ".csv",
     index=True,
     index_label="id",
     header=["category"]
@@ -148,7 +148,7 @@ stacking_test.to_csv(
 
 stacking_train = pd.DataFrame(predictions_train)
 stacking_train.to_csv(
-    path_or_buf=path_to_stacking + "rf_train" + ".csv",
+    path_or_buf=path_to_stacking + "rf_train_2" + ".csv",
     index=True,
     index_label="id",
     header=["category"]
