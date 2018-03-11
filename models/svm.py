@@ -4,13 +4,13 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import KFold
 
-from tools import f1_score
+from models.tools import f1_score
 
 # path
-path_to_data = "../../data/"
-path_to_submissions = "../../submissions/"
-path_to_stacking = "../../stacking"
-path_to_plots = "../../plots"
+path_to_data = "data/"
+path_to_submissions = "submissions/"
+path_to_stacking = "stacking"
+path_to_plots = "models/plots"
 
 # tuned hyperparameters
 parameters = {

@@ -4,15 +4,13 @@ import pandas as pd
 from sklearn.svm import SVC
 from sklearn.pipeline import Pipeline
 from sklearn.decomposition import PCA
-from sklearn.feature_selection import SelectKBest, chi2, mutual_info_classif
+from sklearn.feature_selection import SelectKBest, mutual_info_classif
 from sklearn.model_selection import GridSearchCV
 from sklearn.utils import resample
 
-from code.models.tools import f1_score
-
 # path
-path_to_data = "../../../data/"
-path_to_submissions = "../../../submissions/"
+path_to_data = "data/"
+path_to_plots = "models/tuning/plots/"
 
 # load data
 training = pd.read_csv(path_to_data + "training_features.txt")

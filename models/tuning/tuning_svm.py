@@ -5,12 +5,12 @@ from sklearn.svm import SVC
 from sklearn.model_selection import StratifiedKFold
 from skopt import gp_minimize
 
-from code.models.tools import f1_score
-from code.models.tuning.objective_function import ObjectiveFunction
+from models.tools import f1_score
+from models.tuning.objective_function import ObjectiveFunction
 
 # path
-path_to_data = "../../../data/"
-path_to_submissions = "../../../submissions/"
+path_to_data = "data/"
+path_to_plots = "models/tuning/plots/"
 
 # load data
 training = pd.read_csv(path_to_data + "training_features.txt")
