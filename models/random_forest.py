@@ -38,15 +38,15 @@ my_features_string = [
     "date_diff",
     "overlap_title",
     "common_author",
-    "score_1_2",
-    "score_2_1",
+    # "score_1_2",
+    # "score_2_1",
     "cosine_distance",
     "journal_similarity",
-    "overlapping_words_abstract",
-    "jaccard",
-    "adar",
+    # "overlapping_words_abstract",
+    # "jaccard",
+    # "adar",
     "preferential_attachment",
-    "resource_allocation_index",
+    # "resource_allocation_index",
     "out_neighbors",
     "in_neighbors",
     "common_neighbors",
@@ -55,8 +55,8 @@ my_features_string = [
     "common_successors",
     "common_predecessors",
     "paths_of_length_one"
-    "katz"
-    "katz_2"
+    # "katz"
+    # "katz_2"
 ]
 my_features_index = []
 my_features_dic = {}
