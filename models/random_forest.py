@@ -107,6 +107,7 @@ RF = RandomForestClassifier(
 k = 5
 kf = KFold(k)
 predictions = np.zeros((X_test.shape[0], k))
+predictions_test = np.zeros((X_test.shape[0], k))
 predictions_train = np.zeros(X_train.shape[0])
 i = 0
 
@@ -116,7 +117,8 @@ for train_index, test_index in kf.split(X_train, Y_train):
     Y_pred = RF.predict(X_train[test_index])
     Y_pred_train = RF.predict(X_train[train_index])
     predictions[:, i] = RF.predict(X_test)
-    predictions_train[test_index] = Y_pred
+    predictions_test[:, i] = RF.predict_proba(X_test)[:, 1]
+    predictions_train[test_index] = RF.predict_proba(X_train[test_index])[:, 1]
     current_test_score = f1_score(Y_train[test_index], Y_pred)
     test_score += current_test_score
     print("train: " + str(f1_score(Y_train[train_index], Y_pred_train)))
@@ -135,7 +137,7 @@ submission.to_csv(
 )
 
 # save probabilities for stacking
-stacking_logits_test = np.sum(predictions, axis=1)
+stacking_logits_test = np.sum(predictions_test, axis=1)
 stacking_test = pd.DataFrame(stacking_logits_test)
 stacking_test.to_csv(
     path_or_buf=path_to_stacking + "rf_test" + ".csv",

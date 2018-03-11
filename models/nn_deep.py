@@ -84,6 +84,8 @@ def create_model(neurons=1, dropout_rate=0.1, activation='relu'):
     model = Sequential()
     model.add(Dense(neurons, input_dim=nb_input, activation=activation))
     model.add(Dropout(dropout_rate))
+    model.add(Dense(2 * neurons, activation=activation))
+    model.add(Dropout(dropout_rate))
     model.add(Dense(1, input_dim=nb_input, activation='sigmoid'))
     # Compile model
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
@@ -144,7 +146,7 @@ for train_index, test_index in kf.split(X_train, Y_train):
 Y_test = (np.sum(predictions, axis=1) > 2.5).astype(int)
 submission = pd.DataFrame(Y_test)
 submission.to_csv(
-    path_or_buf=path_to_submissions + "-".join(my_features_acronym) + "nn.csv",
+    path_or_buf=path_to_submissions + "-".join(my_features_acronym) + "nn_deep.csv",
     index=True,
     index_label="id",
     header=["category"]
@@ -154,7 +156,7 @@ submission.to_csv(
 stacking_logits_test = np.sum(predictions_test, axis=1)
 stacking_test = pd.DataFrame(stacking_logits_test)
 stacking_test.to_csv(
-    path_or_buf=path_to_stacking + "nn_test" + ".csv",
+    path_or_buf=path_to_stacking + "nn_deep_test" + ".csv",
     index=True,
     index_label="id",
     header=["category"]
@@ -162,7 +164,7 @@ stacking_test.to_csv(
 
 stacking_train = pd.DataFrame(predictions_train)
 stacking_train.to_csv(
-    path_or_buf=path_to_stacking + "nn_train" + ".csv",
+    path_or_buf=path_to_stacking + "nn_deep_train" + ".csv",
     index=True,
     index_label="id",
     header=["category"]

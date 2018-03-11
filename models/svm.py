@@ -27,23 +27,23 @@ my_features_string = [
     "date_diff",
     "overlap_title",
     "common_author",
-    "score_1_2",
-    "score_2_1",
+    # "score_1_2",
+    # "score_2_1",
     "cosine_distance",
-    "journal_similarity",
-    # "overlapping_words_abstract",
-    "jaccard",
-    "adar",
+    # "journal_similarity",
+    # # "overlapping_words_abstract",
+    # "jaccard",
+    # "adar",
     "preferential_attachment",
-    "resource_allocation_index",
+    # "resource_allocation_index",
     "out_neighbors",
     "in_neighbors",
     "common_neighbors",
-    # "shortest_path",
-    "popularity",
-    # "paths_of_length_one"
-    "katz"
-    "katz_2"
+    # # "shortest_path",
+    # "popularity",
+    # # "paths_of_length_one"
+    # "katz"
+    # "katz_2"
 ]
 
 my_features_index = []
@@ -87,10 +87,12 @@ print("cross validation:")
 svm_classifier = svm.SVC(C=parameters['C'],
                          gamma=parameters['gamma'],
                          kernel=parameters['kernel'] ,
+                         probability=True,
                          verbose=1)
 k = 2
 kf = StratifiedKFold(k)
 predictions = np.zeros((X_test.shape[0], k))
+predictions_test = np.zeros((X_test.shape[0], k))
 predictions_train = np.zeros(X_train.shape[0])
 i = 0
 
@@ -99,7 +101,8 @@ for train_index, test_index in kf.split(X_train, Y_train):
     Y_pred = svm_classifier.predict(X_train[test_index])
     Y_pred_train = svm_classifier.predict(X_train[train_index])
     predictions[:, i] = svm_classifier.predict(X_test)
-    predictions_train[test_index] = Y_pred
+    predictions_test[:, i] = svm_classifier.predict_proba(X_test)[:, 1]
+    predictions_train[test_index] = svm_classifier.predict_proba(X_train[test_index])[:, 1]
     print("train: " + str(f1_score(Y_train[train_index], Y_pred_train)))
     print("test: " + str(f1_score(Y_train[test_index], Y_pred)))
     i += 1
@@ -115,7 +118,7 @@ submission.to_csv(
 )
 
 # save probabilities for stacking
-stacking_logits_test = np.sum(predictions, axis=1)
+stacking_logits_test = np.sum(predictions_test, axis=1)
 stacking_test = pd.DataFrame(stacking_logits_test)
 stacking_test.to_csv(
     path_or_buf=path_to_stacking + "svmlinear_test" + ".csv",
