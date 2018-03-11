@@ -11,7 +11,7 @@ from tqdm import tqdm
 tqdm.pandas(tqdm())
 
 # path
-path_to_data = "../../data/"
+path_to_data = "data/"
 
 # loading data
 converter_dict = {'authors': lit_eval_nan_proof, 'journal': lit_eval_nan_proof,
@@ -106,20 +106,22 @@ for i in tqdm(range(len(id1))):
         else:
             t0 = time.time()
             edgseq_to_remove = g.es.select(index=id1[i])
+            t1 = time.time()
             edge_tuple = []
             for e in edgseq_to_remove:
                 edge_tuple.append(e.tuple)
+            t1_bis = time.time()
             edge_weights = [1] * len(edge_tuple)
             edge_index = [id1[i]] * len(edge_tuple)
             g.delete_edges(index=id1[i])
-            t1 = time.time()
-            print(t1 - t0)
+            t1_ter = time.time()
+            print('bottleneck', t1 - t0, t1_bis - t1, t1_ter - t1_bis)
             sum_out = 0
             n_source = len(authors1)
             for author1 in authors1:
                 sum_out += g.strength(author1, mode='OUT', weights="weight")
             t2 = time.time()
-            print(t2 - t1)
+            print('weighted degree', t2 - t1_ter)
             mean_out = sum_out / n_source
             author_out_degree_sum_source.append(sum_out)
             author_out_degree_mean_source.append(mean_out)
@@ -127,7 +129,7 @@ for i in tqdm(range(len(id1))):
             g.es[len(g.es) - len(edge_tuple):]["weight"] = edge_weights
             g.es[len(g.es) - len(edge_tuple):]["index"] = edge_index
             t3 = time.time()
-            print(t3 - t2)
+            print("append features and re-add edges", t3 - t2)
         if isinstance(authors2, float):
             author_in_degree_sum_target.append(np.nan)
             author_in_degree_mean_target.append(np.nan)
@@ -153,6 +155,7 @@ for i in tqdm(range(len(id1))):
     print("NO NAN")
     t0 = time.time()
     edgseq_to_remove = g.es.select(index_in=[index_train[i], id1[i], id2[i]])
+    t1 = time.time()
     edge_tuple = []
     edge_weights = []
     edge_index = []
@@ -160,9 +163,10 @@ for i in tqdm(range(len(id1))):
         edge_tuple.append(e.tuple)
         edge_weights.append(e["weight"])
         edge_index.append(e["index"])
+    t1_bis = time.time()
     g.delete_edges(index=index_train[i])
-    t1 = time.time()
-    print(t1 - t0)
+    t1_ter = time.time()
+    print('bottleneck', t1 - t0, t1_bis - t1, t1_ter - t1_bis)
     min_value = float('inf')
     max_value = - float('inf')
     sum_value = 0
@@ -176,7 +180,7 @@ for i in tqdm(range(len(id1))):
             sum_value += current
     mean_value = sum_value / n
     t2 = time.time()
-    print(t2 - t1)
+    print('shortest path', t2 - t1_ter)
     sum_out = 0
     sum_in = 0
     n_source = len(authors1)
@@ -188,7 +192,7 @@ for i in tqdm(range(len(id1))):
     mean_out = sum_out / n_source
     mean_in = sum_in / n_target
     t3 = time.time()
-    print(t3 - t2)
+    print('weighted degree', t3 - t2)
     min_shortest_path.append(min_value)
     max_shortest_path.append(max_value)
     sum_shortest_path.append(sum_value)
@@ -201,7 +205,7 @@ for i in tqdm(range(len(id1))):
     g.es[len(g.es) - len(edge_tuple):]["weight"] = edge_weights
     g.es[len(g.es) - len(edge_tuple):]["index"] = edge_index
     t4 = time.time()
-    print(t4 - t3)
+    print("append features and re-add edges", t4 - t3)
 
 # add feature to dataframe
 training["author_min_shortest_path"] = min_shortest_path
