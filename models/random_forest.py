@@ -138,7 +138,7 @@ submission.to_csv(
 stacking_logits_test = np.sum(predictions, axis=1)
 stacking_test = pd.DataFrame(stacking_logits_test)
 stacking_test.to_csv(
-    path_or_buf=path_to_stacking + "rf_test" + ".csv",
+    path_or_buf=path_to_stacking + "rf_test_2" + ".csv",
     index=True,
     index_label="id",
     header=["category"]
@@ -146,7 +146,7 @@ stacking_test.to_csv(
 
 stacking_train = pd.DataFrame(predictions_train)
 stacking_train.to_csv(
-    path_or_buf=path_to_stacking + "rf_train" + ".csv",
+    path_or_buf=path_to_stacking + "rf_train_2" + ".csv",
     index=True,
     index_label="id",
     header=["category"]
