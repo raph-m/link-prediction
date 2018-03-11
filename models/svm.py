@@ -2,22 +2,16 @@ from sklearn import svm
 import datetime
 import numpy as np
 import pandas as pd
-from sklearn.model_selection import KFold
+from sklearn.model_selection import StratifiedKFold
+from sklearn.preprocessing import StandardScaler
 
 from models.tools import f1_score
 
 # path
 path_to_data = "data/"
 path_to_submissions = "submissions/"
-path_to_stacking = "stacking"
+path_to_stacking = "stacking/"
 path_to_plots = "models/plots"
-
-# tuned hyperparameters
-parameters = {
-    'C': 0.1,
-    'gamma': 0.01,
-    'kernel': "rbf"
-}
 
 # load data
 training = pd.read_csv(path_to_data + "training_features.txt")
@@ -30,21 +24,28 @@ training['shortest_path'] = training['shortest_path'].replace([float('inf')], [-
 testing['shortest_path'] = testing['shortest_path'].replace([float('inf')], [-1])
 
 my_features_string = [
-    "overlap_title",
     "date_diff",
+    "overlap_title",
     "common_author",
-    "journal_similarity",
-    "overlapping_words_abstract",
+    "score_1_2",
+    "score_2_1",
     "cosine_distance",
-    "shortest_path",
+    "journal_similarity",
+    # "overlapping_words_abstract",
     "jaccard",
     "adar",
     "preferential_attachment",
     "resource_allocation_index",
     "out_neighbors",
     "in_neighbors",
-    "common_neighbors"
+    "common_neighbors",
+    # "shortest_path",
+    "popularity",
+    # "paths_of_length_one"
+    "katz"
+    "katz_2"
 ]
+
 my_features_index = []
 my_features_dic = {}
 my_features_acronym = ["_".join(list(map(lambda x: x[0], string.split('_')))) for string in my_features_string]
@@ -63,18 +64,34 @@ testing_val = testing.values
 X_train, Y_train = training_val[:, my_features_index].astype(float), training_val[:, target].astype(int)
 X_test = testing_val[:, my_features_index]
 
+# normalize data
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+# tuned hyperparameters
+parameters = {
+    'C': 0.1,
+    'gamma': 0.01,
+    'kernel': "linear"
+}
+
 now = datetime.datetime.now()
 print("date: " + str(now))
 print("features: " + str(my_features_string))
-print("model: Random Forest")
+print("model: SVM")
 print("parameters:")
 print(parameters)
 print("cross validation:")
 
-svm_classifier = svm.SVC(C=0.1, gamma=0.01, kernel="rbf")
-k = 5
-kf = KFold(k)
+svm_classifier = svm.SVC(C=parameters['C'],
+                         gamma=parameters['gamma'],
+                         kernel=parameters['kernel'] ,
+                         verbose=1)
+k = 2
+kf = StratifiedKFold(k)
 predictions = np.zeros((X_test.shape[0], k))
+predictions_train = np.zeros(X_train.shape[0])
 i = 0
 
 for train_index, test_index in kf.split(X_train, Y_train):
@@ -82,6 +99,7 @@ for train_index, test_index in kf.split(X_train, Y_train):
     Y_pred = svm_classifier.predict(X_train[test_index])
     Y_pred_train = svm_classifier.predict(X_train[train_index])
     predictions[:, i] = svm_classifier.predict(X_test)
+    predictions_train[test_index] = Y_pred
     print("train: " + str(f1_score(Y_train[train_index], Y_pred_train)))
     print("test: " + str(f1_score(Y_train[test_index], Y_pred)))
     i += 1
@@ -90,17 +108,25 @@ for train_index, test_index in kf.split(X_train, Y_train):
 Y_test = (np.sum(predictions, axis=1) > 2.5).astype(int)
 submission = pd.DataFrame(Y_test)
 submission.to_csv(
-    path_or_buf=path_to_submissions + "-".join(my_features_string) + "SVM.csv",
+    path_or_buf=path_to_submissions + "-".join(my_features_acronym) + "SVM.csv",
     index=True,
     index_label="id",
     header=["category"]
 )
 
 # save probabilities for stacking
-stacking_logits = np.sum(predictions, axis=1)
-submission = pd.DataFrame(stacking_logits)
-submission.to_csv(
-    path_or_buf=path_to_stacking + "-".join(my_features_acronym) + "lgbm" + ".csv",
+stacking_logits_test = np.sum(predictions, axis=1)
+stacking_test = pd.DataFrame(stacking_logits_test)
+stacking_test.to_csv(
+    path_or_buf=path_to_stacking + "svmlinear_test" + ".csv",
+    index=True,
+    index_label="id",
+    header=["category"]
+)
+
+stacking_train = pd.DataFrame(predictions_train)
+stacking_train.to_csv(
+    path_or_buf=path_to_stacking + "svmlinear_train" + ".csv",
     index=True,
     index_label="id",
     header=["category"]

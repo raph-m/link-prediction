@@ -35,28 +35,26 @@ del training["my_index"]
 del testing["my_index"]
 
 my_features_string = [
-    # "overlap_title",
     "date_diff",
-    # "common_author",
-    # "journal_similarity",
-    # "overlapping_words_abstract",
-    # "cosine_distance",
-    # "shortest_path",
-    # "author_min_shortest_path",
-    # "author_max_shortest_path",
-    # "author_sum_shortest_path",
-    # "author_mean_shortest_path",
-    # "author_out_degree_sum_source",
-    # "author_out_degree_mean_source",
-    # "author_in_degree_sum_target",
-    # "author_in_degree_mean_target",
-    # "jaccard",
-    # "adar",
-    # "preferential_attachment",
-    # "resource_allocation_index",
-    # "out_neighbors",
-    # "in_neighbors",
-    # "common_neighbors"
+    "overlap_title",
+    "common_author",
+    "score_1_2",
+    "score_2_1",
+    "cosine_distance",
+    "journal_similarity",
+    "overlapping_words_abstract",
+    "jaccard",
+    "adar",
+    "preferential_attachment",
+    "resource_allocation_index",
+    "out_neighbors",
+    "in_neighbors",
+    "common_neighbors",
+    "shortest_path",
+    "popularity",
+    "paths_of_length_one"
+    "katz"
+    "katz_2"
 ]
 
 my_features_index = []
@@ -88,6 +86,7 @@ print("cross validation:")
 k = 5
 kf = KFold(k)
 predictions = np.zeros((X_test.shape[0], k))
+predictions_train = np.zeros(X_train.shape[0])
 i = 0
 
 results = []
@@ -103,14 +102,12 @@ for train_index, test_index in kf.split(X_train):
                     feval=f1_score_lgbm
                     )
     res = gbm.predict(X_test)
+    Y_pred = gbm.predict(X_train[test_index])
+    Y_pred_train = gbm.predict(X_train[train_index])
     predictions[:, i] = res
-
-    Y_pred = gbm.predict(X_train[test_index]).round()
-    Y_pred_train = gbm.predict(X_train[train_index]).round()
-    predictions[:, i] = gbm.predict(X_test)
-    print("train: " + str(f1_score(Y_train[train_index], Y_pred_train)))
-    print("test: " + str(f1_score(Y_train[test_index], Y_pred)))
-
+    predictions_train[test_index] = Y_pred
+    print("train: " + str(f1_score(Y_train[train_index], Y_pred_train.round())))
+    print("test: " + str(f1_score(Y_train[test_index], Y_pred.round())))
     i += 1
 
 # save submission file
@@ -124,10 +121,18 @@ submission.to_csv(
 )
 
 # save probabilities for stacking
-stacking_logits = np.sum(predictions, axis=1)
-submission = pd.DataFrame(stacking_logits)
-submission.to_csv(
-    path_or_buf=path_to_stacking + "-".join(my_features_acronym) + "lgbm" + ".csv",
+stacking_logits_test = np.sum(predictions, axis=1)
+stacking_test = pd.DataFrame(stacking_logits_test)
+stacking_test.to_csv(
+    path_or_buf=path_to_stacking + "lgbm_test" + ".csv",
+    index=True,
+    index_label="id",
+    header=["category"]
+)
+
+stacking_train = pd.DataFrame(predictions_train)
+stacking_train.to_csv(
+    path_or_buf=path_to_stacking + "lgbm_train" + ".csv",
     index=True,
     index_label="id",
     header=["category"]

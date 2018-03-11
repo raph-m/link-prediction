@@ -38,15 +38,15 @@ my_features_string = [
     "date_diff",
     "overlap_title",
     "common_author",
-    # "score_1_2",
-    # "score_2_1",
+    "score_1_2",
+    "score_2_1",
     "cosine_distance",
-    # "journal_similarity",
-    # "overlapping_words_abstract",
-    # "jaccard",
-    # "adar",
+    "journal_similarity",
+    "overlapping_words_abstract",
+    "jaccard",
+    "adar",
     "preferential_attachment",
-    # "resource_allocation_index",
+    "resource_allocation_index",
     "out_neighbors",
     "in_neighbors",
     "common_neighbors",
@@ -55,8 +55,8 @@ my_features_string = [
     "common_successors",
     "common_predecessors",
     "paths_of_length_one"
-    # "katz"
-    # "katz_2"
+    "katz"
+    "katz_2"
 ]
 my_features_index = []
 my_features_dic = {}
@@ -107,6 +107,7 @@ RF = RandomForestClassifier(
 k = 5
 kf = KFold(k)
 predictions = np.zeros((X_test.shape[0], k))
+predictions_train = np.zeros(X_train.shape[0])
 i = 0
 
 test_score = 0.0
@@ -115,6 +116,7 @@ for train_index, test_index in kf.split(X_train, Y_train):
     Y_pred = RF.predict(X_train[test_index])
     Y_pred_train = RF.predict(X_train[train_index])
     predictions[:, i] = RF.predict(X_test)
+    predictions_train[test_index] = Y_pred
     current_test_score = f1_score(Y_train[test_index], Y_pred)
     test_score += current_test_score
     print("train: " + str(f1_score(Y_train[train_index], Y_pred_train)))
@@ -133,10 +135,18 @@ submission.to_csv(
 )
 
 # save probabilities for stacking
-stacking_logits = np.sum(predictions, axis=1)
-submission = pd.DataFrame(stacking_logits)
-submission.to_csv(
-    path_or_buf=path_to_stacking + "-".join(my_features_acronym) + "RF" + ".csv",
+stacking_logits_test = np.sum(predictions, axis=1)
+stacking_test = pd.DataFrame(stacking_logits_test)
+stacking_test.to_csv(
+    path_or_buf=path_to_stacking + "rf_test" + ".csv",
+    index=True,
+    index_label="id",
+    header=["category"]
+)
+
+stacking_train = pd.DataFrame(predictions_train)
+stacking_train.to_csv(
+    path_or_buf=path_to_stacking + "rf_train" + ".csv",
     index=True,
     index_label="id",
     header=["category"]
@@ -144,4 +154,4 @@ submission.to_csv(
 
 # print feature importance
 for i in range(len(RF.feature_importances_)):
-    print(str(my_features_dic[i]) + ": " + str(RF.feature_importances_[i]))
+    print(str(my_features_dic[i + 1]) + ": " + str(RF.feature_importances_[i]))
