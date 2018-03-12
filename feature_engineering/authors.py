@@ -55,7 +55,7 @@ for i in range(len(nodes_id)):
                 if coauthors.has_edge(a1, a2):
                     coauthors[a1][a2]["weight"] += 1
                 else:
-                    coauthors.add_edge(a1, a2, weight=0)
+                    coauthors.add_edge(a1, a2, weight=1)
 
 id1 = training["id1"].values
 id2 = training["id2"].values
@@ -83,7 +83,7 @@ for i in range(len(id1)):
                 if G.has_edge(a1, a2):
                     G[a1][a2]["weight"] += 1
                 else:
-                    G.add_edge(a1, a2, weight=0)
+                    G.add_edge(a1, a2, weight=1)
 
 
 coauthor_score = np.zeros(len(id1))
