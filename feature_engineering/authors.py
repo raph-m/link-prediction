@@ -126,9 +126,6 @@ for i in range(len(id1)):
         normalized_number_of_coauthors[i] = number_of_coauthors[i] / denom
         normalized_number_of_links[i] = number_of_links[i] / denom
 
-    normalized_number_of_coauthors[i] = number_of_coauthors[i] / (len(current_authors_1) * len(current_authors_2))
-    normalized_number_of_links[i] = number_of_links[i] / (len(current_authors_1) * len(current_authors_2))
-
     if training.at[str(id1[i]) + "|" + str(id2[i]), "target"] == 1:
         for a1 in current_authors_1:
             for a2 in current_authors_2:
