@@ -178,15 +178,26 @@ for i in range(len(id1)):
     current_authors_1 = [a for a in current_authors_1 if a != ""]
     current_authors_2 = [a for a in current_authors_2 if a != ""]
 
+    best = 0
     for a1 in current_authors_1:
         for a2 in current_authors_2:
             if G.has_edge(a1, a2):
-                authors_citation[i] += G[a1][a2]["weight"]
+                current = G[a1][a2]["weight"]
+                authors_citation[i] += current
+                if current > best:
+                    best = current
+
+    best_authors_citation[i] = best
 
     for a1 in current_authors_1:
         for a2 in current_authors_2:
             if coauthors.has_edge(a1, a2):
-                coauthor_score[i] += coauthors[a1][a2]["weight"]
+                current = coauthors[a1][a2]["weight"]
+                coauthor_score[i] += current
+                if current > best:
+                    best = current
+
+    best_coauthor_score[i] = best
 
     denom = len(current_authors_1) * len(current_authors_2)
     if denom > 0:
