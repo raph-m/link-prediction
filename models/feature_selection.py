@@ -28,6 +28,7 @@ del training["my_index"]
 # replace inf in shortest_path with -1
 training['shortest_path'] = training['shortest_path'].replace([float('inf')], [-1])
 
+
 my_features_string = [
     # "date_diff",
     # "overlap_title",
@@ -48,9 +49,15 @@ my_features_string = [
     # "popularity",
     # "katz",
     # "katz_2",
-    "common_successors",
-    "common_predecessors",
-    "paths_of_length_one"
+    # "common_successors",
+    # "common_predecessors",
+    # "paths_of_length_one",
+    "authors_citation",
+    "normalized_authors_citation",
+    "coauthor_score",
+    "normalized_coauthor_score",
+    "best_coauthor_score",
+    "best_authors_citation",
 ]
 
 my_features_index = []
@@ -106,7 +113,7 @@ for u in range(len(my_features_index)):
                     bootstrap=parameters["bootstrap"],
                     n_jobs=parameters["n_jobs"]
                 )
-                k = 5
+                k = 2
                 kf = KFold(k)
                 train_score = 0.0
                 test_score = 0.0
