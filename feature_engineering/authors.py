@@ -121,6 +121,11 @@ for i in range(len(id1)):
             if a2 in current_neighbors:
                 number_of_coauthors[i] += 1
 
+    denom = len(current_authors_1) * len(current_authors_2)
+    if denom > 0:
+        normalized_number_of_coauthors[i] = number_of_coauthors[i] / denom
+        normalized_number_of_links[i] = number_of_links[i] / denom
+
     normalized_number_of_coauthors[i] = number_of_coauthors[i] / (len(current_authors_1) * len(current_authors_2))
     normalized_number_of_links[i] = number_of_links[i] / (len(current_authors_1) * len(current_authors_2))
 
@@ -170,8 +175,10 @@ for i in range(len(id1)):
             if a2 in current_neighbors:
                 number_of_coauthors[i] += 1
 
-    normalized_number_of_coauthors[i] = number_of_coauthors[i] / (len(current_authors_1) * len(current_authors_2))
-    normalized_number_of_links[i] = number_of_links[i] / (len(current_authors_1) * len(current_authors_2))
+    denom = len(current_authors_1) * len(current_authors_2)
+    if denom > 0:
+        normalized_number_of_coauthors[i] = number_of_coauthors[i] / denom
+        normalized_number_of_links[i] = number_of_links[i] / denom
 
 testing["number_of_links"] = number_of_links
 testing["normalized_number_of_links"] = normalized_number_of_links
@@ -182,3 +189,4 @@ print("done, saving data")
 # save data-frame
 training.to_csv(path_to_data + "training_features.txt")
 testing.to_csv(path_to_data + "testing_features.txt")
+
