@@ -113,7 +113,7 @@ for i in range(len(id1)):
 
     best = 0
     for a1 in current_authors_2:
-        current = len(G.predecessors(a1))
+        current = len([g for g in G.predecessors(a1)])
         authors_in_neighbors[i] += current
         if current > best:
             best = current
@@ -136,12 +136,9 @@ training["best_authors_in_neighbors"] = best_authors_in_neighbors
 id1 = testing["id1"].values
 id2 = testing["id2"].values
 
-coauthor_score = np.zeros(len(id1))
-normalized_coauthor_score = np.zeros(len(id1))
-best_coauthor_score = np.zeros(len(id1))
-authors_citation = np.zeros(len(id1))
-normalized_authors_citation = np.zeros(len(id1))
-best_authors_citation = np.zeros(len(id1))
+authors_in_neighbors = np.zeros(len(id1))
+normalized_authors_in_neighbors = np.zeros(len(id1))
+best_authors_in_neighbors = np.zeros(len(id1))
 
 print("building features for testing")
 for i in range(len(id1)):
@@ -161,7 +158,7 @@ for i in range(len(id1)):
 
     best = 0
     for a1 in current_authors_2:
-        current = len(G.predecessors(a1))
+        current = len([g for g in G.predecessors(a1)])
         authors_in_neighbors[i] += current
         if current > best:
             best = current
