@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import networkx as nx
 from tqdm import tqdm
+import time
 
 from feature_engineering.tools import lit_eval_nan_proof
 
@@ -43,7 +44,7 @@ for i in range(len(nodes_id)):
     if authors is np.nan:
         authors = []
 
-    authors = [a for a in authors if a != ""]
+    authors = np.unique([a for a in authors if a != ""])
 
     for a in authors:
         G.add_node(a)
@@ -55,7 +56,7 @@ for i in range(len(nodes_id)):
                 if coauthors.has_edge(a1, a2):
                     coauthors[a1][a2]["weight"] += 1
                 else:
-                    coauthors.add_edge(a1, a2, weight=0)
+                    coauthors.add_edge(a1, a2, weight=1)
 
 id1 = training["id1"].values
 id2 = training["id2"].values
@@ -74,8 +75,8 @@ for i in range(len(id1)):
     if current_authors_2 is np.nan:
         current_authors_2 = []
 
-    current_authors_1 = [a for a in current_authors_1 if a != ""]
-    current_authors_2 = [a for a in current_authors_2 if a != ""]
+    current_authors_1 = np.unique([a for a in current_authors_1 if a != ""])
+    current_authors_2 = np.unique([a for a in current_authors_2 if a != ""])
 
     if training.at[str(id1[i]) + "|" + str(id2[i]), "target"] == 1:
         for a1 in current_authors_1:
@@ -83,17 +84,20 @@ for i in range(len(id1)):
                 if G.has_edge(a1, a2):
                     G[a1][a2]["weight"] += 1
                 else:
-                    G.add_edge(a1, a2, weight=0)
+                    G.add_edge(a1, a2, weight=1)
 
 
 authors_in_neighbors = np.zeros(len(id1))
 normalized_authors_in_neighbors = np.zeros(len(id1))
 best_authors_in_neighbors = np.zeros(len(id1))
 
+authors_common_neighbors = np.zeros(len(id1))
+
 print("building features for training")
 for i in range(len(id1)):
-    if i % 100000 == 0:
+    if i % 1000 == 0:
         print(i)
+        print(time.time())
     current_authors_1 = nodes.loc[id1[i]]["authors"]
     current_authors_2 = nodes.loc[id2[i]]["authors"]
 
@@ -103,13 +107,20 @@ for i in range(len(id1)):
     if current_authors_2 is np.nan:
         current_authors_2 = []
 
-    current_authors_1 = [a for a in current_authors_1 if a != ""]
-    current_authors_2 = [a for a in current_authors_2 if a != ""]
+    current_authors_1 = np.unique([a for a in current_authors_1 if a != ""])
+    current_authors_2 = np.unique([a for a in current_authors_2 if a != ""])
 
     if training.at[str(id1[i]) + "|" + str(id2[i]), "target"] == 1:
         for a1 in current_authors_1:
             for a2 in current_authors_2:
                 G[a1][a2]["weight"] -= 1
+
+    for a1 in current_authors_1:
+        for p in G.successors(a1):
+            for a2 in G.successors(p):
+                print(a2)
+                if a2 in current_authors_2:
+                    authors_common_neighbors[i] += min(G[a1][p]["weight"], G[p][a2]["weight"])
 
     best = 0
     for a1 in current_authors_2:
@@ -132,6 +143,7 @@ for i in range(len(id1)):
 training["authors_in_neighbors"] = authors_in_neighbors
 training["normalized_authors_in_neighbors"] = normalized_authors_in_neighbors
 training["best_authors_in_neighbors"] = best_authors_in_neighbors
+training["authors_common_neighbors"] = authors_common_neighbors
 
 id1 = testing["id1"].values
 id2 = testing["id2"].values
@@ -139,6 +151,7 @@ id2 = testing["id2"].values
 authors_in_neighbors = np.zeros(len(id1))
 normalized_authors_in_neighbors = np.zeros(len(id1))
 best_authors_in_neighbors = np.zeros(len(id1))
+authors_common_neighbors = np.zeros(len(id1))
 
 print("building features for testing")
 for i in range(len(id1)):
@@ -153,8 +166,14 @@ for i in range(len(id1)):
     if current_authors_2 is np.nan:
         current_authors_2 = []
 
-    current_authors_1 = [a for a in current_authors_1 if a != ""]
-    current_authors_2 = [a for a in current_authors_2 if a != ""]
+    current_authors_1 = np.unique([a for a in current_authors_1 if a != ""])
+    current_authors_2 = np.unique([a for a in current_authors_2 if a != ""])
+
+    for a1 in current_authors_1:
+        for p in G.successors(a1):
+            for a2 in G.successors(p):
+                if a2 in current_authors_2:
+                    authors_common_neighbors[i] += min(G[a1][p]["weight"], G[p][a2]["weight"])
 
     best = 0
     for a1 in current_authors_2:
@@ -172,6 +191,7 @@ for i in range(len(id1)):
 testing["authors_in_neighbors"] = authors_in_neighbors
 testing["normalized_authors_in_neighbors"] = normalized_authors_in_neighbors
 testing["best_authors_in_neighbors"] = best_authors_in_neighbors
+testing["authors_common_neighbors"] = authors_common_neighbors
 
 print("done, saving data")
 # save data-frame

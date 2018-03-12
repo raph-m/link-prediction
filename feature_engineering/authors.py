@@ -43,7 +43,7 @@ for i in range(len(nodes_id)):
     if authors is np.nan:
         authors = []
 
-    authors = [a for a in authors if a != ""]
+    authors = np.unique([a for a in authors if a != ""])
 
     for a in authors:
         G.add_node(a)
@@ -74,8 +74,8 @@ for i in range(len(id1)):
     if current_authors_2 is np.nan:
         current_authors_2 = []
 
-    current_authors_1 = [a for a in current_authors_1 if a != ""]
-    current_authors_2 = [a for a in current_authors_2 if a != ""]
+    current_authors_1 = np.unique([a for a in current_authors_1 if a != ""])
+    current_authors_2 = np.unique([a for a in current_authors_2 if a != ""])
 
     if training.at[str(id1[i]) + "|" + str(id2[i]), "target"] == 1:
         for a1 in current_authors_1:
@@ -106,8 +106,8 @@ for i in range(len(id1)):
     if current_authors_2 is np.nan:
         current_authors_2 = []
 
-    current_authors_1 = [a for a in current_authors_1 if a != ""]
-    current_authors_2 = [a for a in current_authors_2 if a != ""]
+    current_authors_1 = np.unique([a for a in current_authors_1 if a != ""])
+    current_authors_2 = np.unique([a for a in current_authors_2 if a != ""])
 
     if training.at[str(id1[i]) + "|" + str(id2[i]), "target"] == 1:
         for a1 in current_authors_1:
@@ -176,8 +176,8 @@ for i in range(len(id1)):
     if current_authors_2 is np.nan:
         current_authors_2 = []
 
-    current_authors_1 = [a for a in current_authors_1 if a != ""]
-    current_authors_2 = [a for a in current_authors_2 if a != ""]
+    current_authors_1 = np.unique([a for a in current_authors_1 if a != ""])
+    current_authors_2 = np.unique([a for a in current_authors_2 if a != ""])
 
     best = 0
     for a1 in current_authors_1:
