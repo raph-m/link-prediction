@@ -125,6 +125,7 @@ for i in range(len(id1)):
 
     best_authors_citation[i] = best
 
+    best = 0
     for a1 in current_authors_1:
         for a2 in current_authors_2:
             if coauthors.has_edge(a1, a2):
@@ -189,6 +190,7 @@ for i in range(len(id1)):
 
     best_authors_citation[i] = best
 
+    best = 0
     for a1 in current_authors_1:
         for a2 in current_authors_2:
             if coauthors.has_edge(a1, a2):
