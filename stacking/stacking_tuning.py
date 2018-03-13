@@ -35,16 +35,61 @@ print(X_train.head(), X_test.head())
 X_train = X_train.values
 X_test = X_test.values
 
-# model
-model = RandomForestClassifier(
-    criterion = 'entropy',
-    n_estimators=100,
-    min_samples_leaf=6,
-    max_depth=7,
-    bootstrap=True,
-    n_jobs=-1
-)
+# fit a grid searched logistic regression on top of the base models
+# parameters grid
+param_grid = {
+    "C": [1, 0.1, 0.01, 0.001],
+    "penalty": ["l2", "l1"]
+}
 
+# pipeline architecture
+pipe = Pipeline([
+    ('reduce_dim', SelectKBest(chi2)),
+    ('classif', LogisticRegression())
+])
+# parameter values
+nb_features = [2, 3, 4, 5]
+C = [0.001, 0.01, 0.1]
+kernels = ['linear', 'rbf']
+n_estimators = [100, 200]
+max_depth = [10, 20]
+min_samples_leaf = [20]
+penalty = ["l2", "l1"]
+
+# parameter grid
+param_grid = [
+    {
+        'reduce_dim__k': [5],
+        'classif': [RandomForestClassifier(bootstrap=True, n_jobs=-1)],
+        'classif__n_estimators': n_estimators,
+        'classif__max_depth': max_depth,
+        'classif__min_samples_leaf': min_samples_leaf,
+
+    },
+    {
+        'reduce_dim__k': nb_features,
+        'classif': [LogisticRegression(n_jobs=-1)],
+        'classif__C': C,
+        'classif__penalty': penalty
+    }
+]
+
+# cross validation grid search instance
+grid = GridSearchCV(pipe, cv=4, n_jobs=-1, param_grid=param_grid, verbose=10)
+
+# fit grid
+grid.fit(X_train, Y_train)
+
+# print best params
+print(grid.best_params_)
+
+
+# get params
+print(grid.best_params_)
+parameters = grid.best_params_
+
+# model instance for prediction
+model = grid.best_estimator_
 
 # cross validated predictions
 k = 5
@@ -64,7 +109,7 @@ for train_index, test_index in kf.split(X_train, Y_train):
 Y_test = (np.sum(predictions, axis=1) > 2.5).astype(int)
 submission = pd.DataFrame(Y_test)
 submission.to_csv(
-    path_or_buf=path_to_submissions + "stack_sub_rf.csv",
+    path_or_buf=path_to_submissions + "stack_sub2.csv",
     index=True,
     index_label="id",
     header=["category"]

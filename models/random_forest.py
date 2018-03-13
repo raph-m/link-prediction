@@ -1,8 +1,9 @@
-from sklearn.model_selection import KFold
-from sklearn.ensemble import RandomForestClassifier
-import pandas as pd
-import numpy as np
 import datetime
+
+import numpy as np
+import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import KFold
 
 from models.tools import f1_score
 
@@ -54,14 +55,16 @@ my_features_string = [
     "popularity",
     "common_successors",
     "common_predecessors",
-    "paths_of_length_one"
+    "paths_of_length_one",
+    "authors_citation",
+    "coauthor_score"
     # "katz"
     # "katz_2"
 ]
+
 my_features_index = []
 my_features_dic = {}
 my_features_acronym = ["_".join(list(map(lambda x: x[0], string.split('_')))) for string in my_features_string]
-print(my_features_acronym)
 
 target = 0
 for i in range(len(training.columns)):
@@ -76,6 +79,7 @@ for i in range(len(training.columns)):
     if training.columns[i] in my_features_string:
         my_features_dic.update({i: training.columns[i]})
         my_features_index.append(i)
+
 # separating features and labels
 training_val = training.values
 testing_val = testing.values
@@ -94,7 +98,6 @@ print("model: Random Forest")
 print("parameters:")
 print(parameters)
 print("cross validation:")
-
 
 RF = RandomForestClassifier(
     n_estimators=parameters["n_estimators"],
@@ -125,7 +128,7 @@ for train_index, test_index in kf.split(X_train, Y_train):
     print("test: " + str(current_test_score))
     i += 1
 
-print("CV test score: "+str(test_score/k))
+print("CV test score: " + str(test_score / k))
 # save submission file
 Y_test = (np.sum(predictions, axis=1) > 2.5).astype(int)
 submission = pd.DataFrame(Y_test)
