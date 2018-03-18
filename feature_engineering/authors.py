@@ -5,8 +5,8 @@ from tqdm import tqdm
 
 from feature_engineering.tools import lit_eval_nan_proof
 
-# this script computes the features out_neighbors, in_neighbors and popularity by considering the directed
-# graph of citations. Popularity is the sum of in degrees of predecessors.
+# this script computes the features authors_citation and coauthor score by considering the graph of coauthorship and
+# the author's graph of citations.
 # the script takes approximately 5 minutes to run
 
 # progress bar for pandas

@@ -49,7 +49,16 @@ print("done in: "+str(end-start))
 
 
 start = time.time()
-print("networkx_bigraph_long:")
-import feature_engineering.networkx_bigraph_long
+print("author's features:")
+import feature_engineering.authors
 end = time.time()
 print("done in: "+str(end-start))
+
+
+start = time.time()
+print("author's features:")
+import feature_engineering.authors_2
+end = time.time()
+print("done in: "+str(end-start))
+
+# TODO: ML and stacking
