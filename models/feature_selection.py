@@ -13,9 +13,9 @@ path_to_plots = "plots"
 # tuned hyper-parameters
 
 parameters = {
-    "n_estimators": 150,
+    "n_estimators": 100,
     "criterion": "entropy",  # default = gini
-    "max_depth": 9,
+    "max_depth": 20,
     "min_samples_leaf": 10,
     "bootstrap": True,
     "n_jobs": -1
@@ -30,34 +30,35 @@ training['shortest_path'] = training['shortest_path'].replace([float('inf')], [-
 
 
 my_features_string = [
-    # "date_diff",
-    # "overlap_title",
-    # "common_author",
-    # "score_1_2",
-    # "score_2_1",
-    # "cosine_distance",
-    # "journal_similarity",
-    # "overlapping_words_abstract",
-    # "jaccard",
-    # "adar",
-    # "preferential_attachment",
-    # "resource_allocation_index",
-    # "out_neighbors",
-    # "in_neighbors",
-    # "common_neighbors",
-    # "shortest_path",
-    # "popularity",
-    # "katz",
-    # "katz_2",
-    # "common_successors",
-    # "common_predecessors",
-    # "paths_of_length_one",
+    "date_diff",
+    "overlap_title",
+    "common_author",
+    "score_1_2",
+    "score_2_1",
+    "cosine_distance",
+    "journal_similarity",
+    "overlapping_words_abstract",
+    "jaccard",
+    "adar",
+    "preferential_attachment",
+    "resource_allocation_index",
+    "out_neighbors",
+    "in_neighbors",
+    "common_neighbors",
+    "shortest_path",
+    "popularity",
+    "common_successors",
+    "common_predecessors",
+    "paths_of_length_one",
     "authors_citation",
     "normalized_authors_citation",
+    "best_authors_citation",
     "coauthor_score",
     "normalized_coauthor_score",
     "best_coauthor_score",
-    "best_authors_citation",
+    "authors_in_neighbors",
+    "normalized_authors_in_neighbors",
+    "best_authors_in_neighbors"
 ]
 
 my_features_index = []
@@ -73,7 +74,7 @@ Y_train = training.values[:, target].astype(int)
 
 del training["target"]
 
-already_computed_names = []  # ['common_neighbors', 'cosine_distance', 'date_diff']
+already_computed_names = []
 already_computed = []
 
 for i in range(len(training.columns)):

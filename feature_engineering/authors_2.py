@@ -90,7 +90,6 @@ for i in range(len(id1)):
 authors_in_neighbors = np.zeros(len(id1))
 normalized_authors_in_neighbors = np.zeros(len(id1))
 best_authors_in_neighbors = np.zeros(len(id1))
-
 authors_common_neighbors = np.zeros(len(id1))
 
 print("building features for training")
@@ -115,12 +114,12 @@ for i in range(len(id1)):
             for a2 in current_authors_2:
                 G[a1][a2]["weight"] -= 1
 
-    for a1 in current_authors_1:
-        for p in G.successors(a1):
-            for a2 in G.successors(p):
-                print(a2)
-                if a2 in current_authors_2:
-                    authors_common_neighbors[i] += min(G[a1][p]["weight"], G[p][a2]["weight"])
+    # this feature is commented because too long to compute
+    # for a1 in current_authors_1:
+    #     for p in G.successors(a1):
+    #         for a2 in G.successors(p):
+    #             if a2 in current_authors_2:
+    #                 authors_common_neighbors[i] += min(G[a1][p]["weight"], G[p][a2]["weight"])
 
     best = 0
     for a1 in current_authors_2:
@@ -131,6 +130,7 @@ for i in range(len(id1)):
 
     best_authors_in_neighbors[i] = best
 
+    # normalize feature
     denom = len(current_authors_2)
     if denom > 0:
         normalized_authors_in_neighbors[i] = authors_in_neighbors[i] / denom
@@ -169,11 +169,11 @@ for i in range(len(id1)):
     current_authors_1 = np.unique([a for a in current_authors_1 if a != ""])
     current_authors_2 = np.unique([a for a in current_authors_2 if a != ""])
 
-    for a1 in current_authors_1:
-        for p in G.successors(a1):
-            for a2 in G.successors(p):
-                if a2 in current_authors_2:
-                    authors_common_neighbors[i] += min(G[a1][p]["weight"], G[p][a2]["weight"])
+    # for a1 in current_authors_1:
+    #     for p in G.successors(a1):
+    #         for a2 in G.successors(p):
+    #             if a2 in current_authors_2:
+    #                 authors_common_neighbors[i] += min(G[a1][p]["weight"], G[p][a2]["weight"])
 
     best = 0
     for a1 in current_authors_2:
@@ -184,6 +184,7 @@ for i in range(len(id1)):
 
     best_authors_in_neighbors[i] = best
 
+    # normalize feature
     denom = len(current_authors_2)
     if denom > 0:
         normalized_authors_in_neighbors[i] = authors_in_neighbors[i] / denom

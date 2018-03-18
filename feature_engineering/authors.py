@@ -136,6 +136,7 @@ for i in range(len(id1)):
 
     best_coauthor_score[i] = best
 
+    # normalize features
     denom = len(current_authors_1) * len(current_authors_2)
     if denom > 0:
         normalized_authors_citation[i] = authors_citation[i] / denom
@@ -201,6 +202,7 @@ for i in range(len(id1)):
 
     best_coauthor_score[i] = best
 
+    # normalize features
     denom = len(current_authors_1) * len(current_authors_2)
     if denom > 0:
         normalized_authors_citation[i] = authors_citation[i] / denom
