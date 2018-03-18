@@ -5,7 +5,7 @@ import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import KFold
 
-from models.tools import f1_score
+from models.tools import f1_score, plot_importance
 
 # path
 path_to_data = "data/"
@@ -37,28 +37,28 @@ testing['shortest_path'] = testing['shortest_path'].replace([float('inf')], [-1]
 
 my_features_string = [
     "date_diff",
-    "overlap_title",
+    # "overlap_title",
     "common_author",
     # "score_1_2",
     # "score_2_1",
     "cosine_distance",
-    "journal_similarity",
+    # "journal_similarity",
     # "overlapping_words_abstract",
     # "jaccard",
     # "adar",
     "preferential_attachment",
     # "resource_allocation_index",
-    "out_neighbors",
+    # "out_neighbors",
     "in_neighbors",
     "common_neighbors",
-    "shortest_path",
-    "popularity",
-    "common_successors",
-    "common_predecessors",
-    "paths_of_length_one",
+    # "shortest_path",
+    # "popularity",
+    # "common_successors",
+    # "common_predecessors",
+    # "paths_of_length_one",
     "authors_citation",
-    "coauthor_score"
-    # "katz"
+    # "coauthor_score",
+    # "katz",
     # "katz_2"
 ]
 
@@ -107,7 +107,7 @@ RF = RandomForestClassifier(
     bootstrap=parameters["bootstrap"],
     n_jobs=parameters["n_jobs"]
 )
-k = 5
+k = 2
 kf = KFold(k)
 predictions = np.zeros((X_test.shape[0], k))
 predictions_test = np.zeros((X_test.shape[0], k))
@@ -157,6 +157,9 @@ stacking_train.to_csv(
     header=["category"]
 )
 
-# print feature importance
-for i in range(len(RF.feature_importances_)):
-    print(str(my_features_dic[i + 1]) + ": " + str(RF.feature_importances_[i]))
+# plot feature importances
+plot_importance(RF,
+                features_dict=my_features_dic,
+                features_index=my_features_index,
+                name='rf_importance')
+
