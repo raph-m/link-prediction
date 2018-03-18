@@ -1,7 +1,7 @@
+import networkx as nx
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
-import networkx as nx
 
 from feature_engineering.tools import lit_eval_nan_proof
 
@@ -71,7 +71,6 @@ for i in tqdm(range(len(id1))):
 training["katz"] = katz
 training["katz_2"] = katz_2
 
-
 # IDs for training set
 id1 = testing['id1'].values
 id2 = testing['id2'].values
@@ -104,7 +103,6 @@ for i in tqdm(range(len(id1))):
 # add feature to data-frame
 testing["katz"] = katz
 testing["katz_2"] = katz_2
-
 
 # save data-frame
 training.to_csv(path_to_data + "training_features.txt")

@@ -1,7 +1,8 @@
+import ast
+
+import nltk
 import numpy as np
 import pandas as pd
-import ast
-import nltk
 
 
 # journal similarity feature

@@ -4,8 +4,9 @@ from itertools import permutations, product
 import igraph
 import numpy as np
 import pandas as pd
-from feature_engineering.tools import lit_eval_nan_proof
 from tqdm import tqdm
+
+from feature_engineering.tools import lit_eval_nan_proof
 
 # progress bar for pandas
 tqdm.pandas(tqdm())
@@ -22,7 +23,6 @@ training = pd.read_csv(path_to_data + "training_features.txt")
 training.set_index("my_index", inplace=True)
 testing = pd.read_csv(path_to_data + "testing_features.txt")
 testing.set_index("my_index", inplace=True)
-
 
 # create author graph
 # vertices are authors
@@ -108,7 +108,7 @@ for i in tqdm(range(len(authors_array))):
             edges[pair] = 1
             # store weight
             weights[pair] = 2
-        
+
 # add edges to graph
 g.add_edges(list(edges))
 

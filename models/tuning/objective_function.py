@@ -1,5 +1,6 @@
 class ObjectiveFunction:
     """class to analyze objective function optimization : hyperparameter tuning"""
+
     def __init__(self, func):
         self.f = func
         self.history_f = []

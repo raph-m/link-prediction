@@ -1,7 +1,8 @@
+from multiprocessing import Pool
+
+import networkx as nx
 import numpy as np
 import pandas as pd
-import networkx as nx
-from multiprocessing import Pool
 from tqdm import tqdm
 
 from feature_engineering.tools import lit_eval_nan_proof
@@ -40,7 +41,6 @@ beta_2 = 0.9
 
 
 def work(i0=None, n=None, is_training=True):
-
     print(i0)
     G = nx.Graph()
     G.add_nodes_from(nodes.index.values)
@@ -51,14 +51,14 @@ def work(i0=None, n=None, is_training=True):
 
     for i in range(n):
         if is_training:
-            if training.at[str(id1[i0+i]) + "|" + str(id2[i0+i]), "target"] == 1:
-                G.remove_edge(id1[i0+i], id2[i0+i])
+            if training.at[str(id1[i0 + i]) + "|" + str(id2[i0 + i]), "target"] == 1:
+                G.remove_edge(id1[i0 + i], id2[i0 + i])
 
         katz_acc = 0.0
         katz_2_acc = 0.0
         counter = 0
         try:
-            iterator = nx.all_shortest_paths(G, source=id1[i0+i], target=id2[i0+i])
+            iterator = nx.all_shortest_paths(G, source=id1[i0 + i], target=id2[i0 + i])
             for p in iterator:
                 len_p = len(p)
                 katz_acc += (beta ** len_p)
@@ -71,8 +71,8 @@ def work(i0=None, n=None, is_training=True):
             ans_2[i] = -1
 
         if is_training:
-            if training.at[str(id1[i0+i]) + "|" + str(id2[i0+i]), "target"] == 1:
-                G.add_edge(id1[i0+i], id2[i0+i])
+            if training.at[str(id1[i0 + i]) + "|" + str(id2[i0 + i]), "target"] == 1:
+                G.add_edge(id1[i0 + i], id2[i0 + i])
 
         ans[i] = katz_acc
         ans_2[i] = katz_2_acc
@@ -85,11 +85,13 @@ def work(i0=None, n=None, is_training=True):
 def callback(r):
     ans, ans_2, i0 = r
 
+
 # computing features for training set
 
 pool = Pool()
 print("starting pool...")
 import time
+
 start = time.time()
 n_tasks = 512
 tasks = []
@@ -105,15 +107,14 @@ for i0 in range(n_tasks):
 pool.close()
 pool.join()
 for i in range(n_tasks):
-    katz[i * step: (i + 1) * step],\
-        katz_2[i * step: (i+1) * step], _ = tasks[i].get()
+    katz[i * step: (i + 1) * step], \
+    katz_2[i * step: (i + 1) * step], _ = tasks[i].get()
 
 end = time.time()
-print(end-start)
+print(end - start)
 # add feature to data-frame
 training["katz"] = katz
 training["katz_2"] = katz_2
-
 
 # IDs for testing set
 print("start computing for training: ")
@@ -142,8 +143,8 @@ for i0 in range(n_tasks):
 pool.close()
 pool.join()
 for i in range(n_tasks):
-    katz[i * step: (i + 1) * step],\
-        katz_2[i * step: (i+1) * step], _ = tasks[i].get()
+    katz[i * step: (i + 1) * step], \
+    katz_2[i * step: (i + 1) * step], _ = tasks[i].get()
 
 # add feature to data-frame
 testing["katz"] = katz

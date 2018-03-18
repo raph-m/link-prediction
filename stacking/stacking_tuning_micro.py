@@ -1,12 +1,6 @@
 import pandas as pd
-import numpy as np
-from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import GridSearchCV, StratifiedKFold
-from sklearn.metrics import f1_score
-from sklearn.pipeline import Pipeline
-from sklearn.decomposition import PCA
-from sklearn.feature_selection import SelectKBest, chi2
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import GridSearchCV
 
 # path
 path_to_data = "data/"
@@ -29,24 +23,24 @@ for model in model_strings:
     # take the mean of the test set probs of each cv fold
     if model == 'svm_linear':
         X_test[model] = 0.5 * pd.read_csv(path_to_stacking + model + "_test.csv")['category'].values
-    else :
+    else:
         X_test[model] = 0.2 * pd.read_csv(path_to_stacking + model + "_test.csv")['category'].values
 print(X_train.head(), X_test.head())
 X_train = X_train.values
 X_test = X_test.values
 
-# GridSearchCV
+# GridSearchCV to fine tune the stacking parameters
 
-# param grid
+# instantiate param grid
 
 tuned_parameters = {
     "n_estimators": [100],
     "max_depth": [3, 7, 10],
     "min_samples_leaf": [6],
-    "criterion" : ["entropy"]
+    "criterion": ["entropy"]
 }
 
-# tuning
+# fit a GridSearchCV instance and print optimal parameters
 rf = RandomForestClassifier(
     bootstrap=True,
     n_jobs=-1

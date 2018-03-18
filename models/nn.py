@@ -1,17 +1,15 @@
-from sklearn.model_selection import StratifiedKFold
-from sklearn.ensemble import RandomForestClassifier
-import pandas as pd
-import numpy as np
 import datetime
-import pandas as pd
+
 import numpy
-from sklearn.model_selection import GridSearchCV
-from sklearn.preprocessing import StandardScaler
-from keras.models import Sequential
+import numpy as np
+import pandas as pd
 from keras.layers import Dense, Dropout
+from keras.models import Sequential
 from keras.wrappers.scikit_learn import KerasClassifier
+from sklearn.model_selection import StratifiedKFold
+from sklearn.preprocessing import StandardScaler
+
 from models.tools import load_data
-from models.tools import f1_score
 
 # path
 path_to_data = "data/"
@@ -81,6 +79,8 @@ X_test = scaler.transform(X_test)
 
 # Function to create model, required for KerasClassifier
 nb_input = len(my_features_string)
+
+
 def create_model(neurons=1, dropout_rate=0.1, activation='relu'):
     # create model
     model = Sequential()
@@ -90,6 +90,7 @@ def create_model(neurons=1, dropout_rate=0.1, activation='relu'):
     # Compile model
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
     return model
+
 
 # parameters
 epochs = 30
@@ -103,15 +104,16 @@ neurons = 75
 seed = 7
 numpy.random.seed(seed)
 
-# create model
+# instantiate classifier
 nn = KerasClassifier(build_fn=create_model,
-                        epochs=epochs,
-                        batch_size=batch_size,
-                        dropout_rate=dropout_rate,
-                        neurons=neurons,
-                        verbose=1
-                        )
+                     epochs=epochs,
+                     batch_size=batch_size,
+                     dropout_rate=dropout_rate,
+                     neurons=neurons,
+                     verbose=1
+                     )
 
+# print user info
 now = datetime.datetime.now()
 print("date: " + str(now))
 print("features: " + str(my_features_string))
@@ -120,6 +122,7 @@ print("parameters:")
 print(parameters)
 print("cross validation:")
 
+# instantiate Kfold and predictions placeholder
 k = 5
 kf = StratifiedKFold(k)
 predictions = np.zeros((X_test.shape[0], k))
@@ -127,6 +130,7 @@ predictions_test = np.zeros((X_test.shape[0], k))
 predictions_train = np.zeros(X_train.shape[0])
 i = 0
 
+# for each fold store predictions on test set and print validation results
 test_score = 0.0
 for train_index, test_index in kf.split(X_train, Y_train):
     nn.fit(X_train[train_index], Y_train[train_index])

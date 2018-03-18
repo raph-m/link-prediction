@@ -5,7 +5,7 @@ import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import KFold
 
-from models.tools import f1_score, plot_importance
+from models.tools import f1_score, plot_importance, load_data
 
 # path
 path_to_data = "data/"
@@ -24,16 +24,7 @@ parameters = {
     "n_jobs": -1
 }
 
-# load data
-training = pd.read_csv(path_to_data + "training_features.txt")
-testing = pd.read_csv(path_to_data + "testing_features.txt")
-
-del training["my_index"]
-del testing["my_index"]
-
-# replace inf in shortest_path with -1
-training['shortest_path'] = training['shortest_path'].replace([float('inf')], [-1])
-testing['shortest_path'] = testing['shortest_path'].replace([float('inf')], [-1])
+# used features
 
 my_features_string = [
     "date_diff",
@@ -62,35 +53,17 @@ my_features_string = [
     # "katz_2"
 ]
 
-my_features_index = []
-my_features_dic = {}
 my_features_acronym = ["_".join(list(map(lambda x: x[0], string.split('_')))) for string in my_features_string]
 
-target = 0
-for i in range(len(training.columns)):
-    if training.columns[i] == "target":
-        target = i
+# load data
 
-Y_train = training.values[:, target].astype(int)
+(X_train,
+ X_test,
+ Y_train,
+ my_features_index,
+ my_features_dic) = load_data(my_features_string)
 
-del training["target"]
-
-for i in range(len(training.columns)):
-    if training.columns[i] in my_features_string:
-        my_features_dic.update({i: training.columns[i]})
-        my_features_index.append(i)
-
-# separating features and labels
-training_val = training.values
-testing_val = testing.values
-X_train = training_val[:, my_features_index].astype(float)
-X_test = testing_val[:, my_features_index]
-del training_val
-del testing_val
-
-print(training.head())
-print(testing.head())
-
+# print user info
 now = datetime.datetime.now()
 print("date: " + str(now))
 print("features: " + str(my_features_string))
@@ -99,6 +72,7 @@ print("parameters:")
 print(parameters)
 print("cross validation:")
 
+# instantiate classifier
 RF = RandomForestClassifier(
     n_estimators=parameters["n_estimators"],
     criterion=parameters["criterion"],
@@ -107,6 +81,8 @@ RF = RandomForestClassifier(
     bootstrap=parameters["bootstrap"],
     n_jobs=parameters["n_jobs"]
 )
+
+# instantiate Kfold and predictions placeholder
 k = 2
 kf = KFold(k)
 predictions = np.zeros((X_test.shape[0], k))
@@ -114,6 +90,7 @@ predictions_test = np.zeros((X_test.shape[0], k))
 predictions_train = np.zeros(X_train.shape[0])
 i = 0
 
+# for each fold store predictions on test set and print validation results
 test_score = 0.0
 for train_index, test_index in kf.split(X_train, Y_train):
     RF.fit(X_train[train_index], Y_train[train_index])
@@ -162,4 +139,3 @@ plot_importance(RF,
                 features_dict=my_features_dic,
                 features_index=my_features_index,
                 name='rf_importance')
-

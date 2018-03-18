@@ -2,11 +2,10 @@ import math
 
 import numpy as np
 import pandas as pd
-from tqdm import tqdm
 from gensim import corpora, models
+from tqdm import tqdm
 
 from feature_engineering.tools import lit_eval_nan_proof
-
 
 # this script adds the features score_1_2, score_2_1 and cosine_distance to the features csv files.
 # this script takes approximately 10 minutes to run
@@ -35,6 +34,7 @@ dictionary = corpora.Dictionary(abstracts)
 
 def my_tf(p):
     return math.log(1.0 + p)
+
 
 # instantiate tf-idf model
 tfidf = models.TfidfModel(dictionary=dictionary, wlocal=my_tf)
@@ -68,7 +68,6 @@ def cosine_distance(id1, id2):
 
 
 def get_score(id1, id2, avglen, k1=1.2, b=0.75):
-
     abstract_1 = nodes.at[id1, "abstract"]
     len_1 = len(abstract_1)
     abstract_1 = dictionary.doc2bow(abstract_1)

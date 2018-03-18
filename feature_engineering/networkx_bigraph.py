@@ -1,7 +1,7 @@
+import networkx as nx
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
-import networkx as nx
 
 from feature_engineering.tools import lit_eval_nan_proof
 
@@ -76,7 +76,6 @@ training["preferential_attachment"] = preferential_attachment
 training["resource_allocation_index"] = resource_allocation_index
 training["common_neighbors"] = resource_allocation_index
 
-
 # IDs for training set
 id1 = testing['id1'].values
 id2 = testing['id2'].values
@@ -117,7 +116,6 @@ testing["adar"] = adar
 testing["preferential_attachment"] = preferential_attachment
 testing["resource_allocation_index"] = resource_allocation_index
 testing["common_neighbors"] = resource_allocation_index
-
 
 # save data-frame
 training.to_csv(path_to_data + "training_features.txt")

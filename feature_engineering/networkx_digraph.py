@@ -1,6 +1,6 @@
+import networkx as nx
 import numpy as np
 import pandas as pd
-import networkx as nx
 from tqdm import tqdm
 
 from feature_engineering.tools import lit_eval_nan_proof
@@ -90,7 +90,6 @@ training["common_successors"] = out_neighbors
 training["common_predecessors"] = in_neighbors
 training["paths_of_length_one"] = popularity
 
-
 # IDs for training set
 id1 = testing['id1'].values
 id2 = testing['id2'].values
@@ -137,7 +136,6 @@ for i in tqdm(range(len(id1))):
     paths_of_length_one[i] = current_paths_of_length_one
 
     popularity[i] = pop
-
 
 # add feature to data-frame
 testing["out_neighbors"] = out_neighbors

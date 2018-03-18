@@ -73,4 +73,3 @@ testing["shortest_path"] = shortest_path_test
 # save data sets
 training.to_csv(path_to_data + "training_features.txt")
 testing.to_csv(path_to_data + "testing_features.txt")
-

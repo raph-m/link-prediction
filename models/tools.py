@@ -1,8 +1,8 @@
+import matplotlib as mpl
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib as mpl
 import seaborn as sns
-import matplotlib.pyplot as plt
 
 
 def binary_error(preds, train_data):
@@ -116,9 +116,3 @@ def plot_importance(rf, features_dict, features_index, name):
     plt.ylim([0, 0.8])
     plt.savefig(path_to_plot + name)
     plt.show()
-
-
-
-
-
-

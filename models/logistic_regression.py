@@ -1,11 +1,11 @@
 import datetime
+
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegressionCV
 from sklearn.model_selection import KFold
 
 from models.tools import f1_score
-
 
 # path
 path_to_data = "data/"
@@ -64,7 +64,7 @@ for i in range(len(training.columns)):
     if training.columns[i] in my_features_string:
         my_features_dic.update({i: training.columns[i]})
         my_features_index.append(i)
-        
+
 # separating features and labels
 training_val = training.values
 testing_val = testing.values
@@ -72,8 +72,8 @@ X_train = training_val[:, my_features_index].astype(float)
 X_test = testing_val[:, my_features_index]
 
 now = datetime.datetime.now()
-print("date: "+str(now))
-print("features: "+str(my_features_string))
+print("date: " + str(now))
+print("features: " + str(my_features_string))
 print("model: Random Forest")
 print("parameters:")
 print(parameters)
@@ -92,8 +92,8 @@ for train_index, test_index in kf.split(X_train, Y_train):
     Y_pred = LogReg.predict(X_train[test_index])
     Y_pred_train = LogReg.predict(X_train[train_index])
     predictions[:, i] = LogReg.predict(X_test)
-    print("train: "+str(f1_score(Y_train[train_index], Y_pred_train)))
-    print("test: "+str(f1_score(Y_train[test_index], Y_pred)))
+    print("train: " + str(f1_score(Y_train[train_index], Y_pred_train)))
+    print("test: " + str(f1_score(Y_train[test_index], Y_pred)))
     i += 1
 
 Y_test = (np.sum(predictions, axis=1) > 2.5).astype(int)

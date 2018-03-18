@@ -1,8 +1,9 @@
+import time
+
+import networkx as nx
 import numpy as np
 import pandas as pd
-import networkx as nx
 from tqdm import tqdm
-import time
 
 from feature_engineering.tools import lit_eval_nan_proof
 
@@ -85,7 +86,6 @@ for i in range(len(id1)):
                     G[a1][a2]["weight"] += 1
                 else:
                     G.add_edge(a1, a2, weight=1)
-
 
 authors_in_neighbors = np.zeros(len(id1))
 normalized_authors_in_neighbors = np.zeros(len(id1))
@@ -198,4 +198,3 @@ print("done, saving data")
 # save data-frame
 training.to_csv(path_to_data + "training_features.txt")
 testing.to_csv(path_to_data + "testing_features.txt")
-

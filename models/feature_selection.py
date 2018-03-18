@@ -1,6 +1,6 @@
-from sklearn.model_selection import KFold
-from sklearn.ensemble import RandomForestClassifier
 import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import KFold
 
 from models.tools import f1_score
 
@@ -27,7 +27,6 @@ del training["my_index"]
 
 # replace inf in shortest_path with -1
 training['shortest_path'] = training['shortest_path'].replace([float('inf')], [-1])
-
 
 my_features_string = [
     "date_diff",
@@ -134,7 +133,7 @@ for u in range(len(my_features_index)):
                     best_train_score = train_score
                     best_test_score = test_score
 
-                print("train score: "+str(train_score))
+                print("train score: " + str(train_score))
                 print("test score: " + str(test_score))
                 print("")
 

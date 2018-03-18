@@ -1,10 +1,10 @@
 import pandas as pd
-import numpy
+from keras.layers import Dense, Dropout
+from keras.models import Sequential
+from keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.preprocessing import StandardScaler
-from keras.models import Sequential
-from keras.layers import Dense, Dropout
-from keras.wrappers.scikit_learn import KerasClassifier
+
 from models.tools import load_data
 
 # path
@@ -37,9 +37,6 @@ my_features_string = [
     # "katz_2"
 ]
 
-my_features_acronym = ["_".join(list(map(lambda x: x[0], string.split('_')))) for string in my_features_string]
-print(my_features_acronym)
-
 (X_train,
  X_test,
  Y_train,
@@ -62,6 +59,8 @@ X_test = scaler.transform(X_test)
 
 # Function to create model, required for KerasClassifier
 nb_input = len(my_features_string)
+
+
 def create_model(neurons=1, dropout_rate=0.1, activation='relu'):
     # create model
     model = Sequential()
@@ -71,11 +70,6 @@ def create_model(neurons=1, dropout_rate=0.1, activation='relu'):
     # Compile model
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
     return model
-
-
-# fix random seed for reproducibility
-seed = 7
-numpy.random.seed(seed)
 
 # fixed parameters
 epochs = 20

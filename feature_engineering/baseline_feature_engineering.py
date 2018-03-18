@@ -53,7 +53,6 @@ training["overlap_title"] = overlap_title
 training["date_diff"] = date_diff
 training["common_author"] = common_author
 
-
 # repeat process for test set
 overlap_title_test = []
 date_diff_test = []

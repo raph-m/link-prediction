@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import KFold
 
-from models.tools import f1_score, f1_score_lgbm
+from models.tools import f1_score, f1_score_lgbm, load_data
 
 # path
 path_to_data = "data/"
@@ -28,16 +28,7 @@ parameters = {
     "min_data_in_leaf": 3,
     "max_depth": 150
 }
-# load data
-training = pd.read_csv(path_to_data + "training_features.txt")
-testing = pd.read_csv(path_to_data + "testing_features.txt")
-
-del training["my_index"]
-del testing["my_index"]
-
-# replace inf in shortest_path with -1
-training['shortest_path'] = training['shortest_path'].replace([float('inf')], [-1])
-testing['shortest_path'] = testing['shortest_path'].replace([float('inf')], [-1])
+# used features
 
 my_features_string = [
     "date_diff",
@@ -65,36 +56,18 @@ my_features_string = [
     # "katz"
     # "katz_2"
 ]
-my_features_index = []
-my_features_dic = {}
+
 my_features_acronym = ["_".join(list(map(lambda x: x[0], string.split('_')))) for string in my_features_string]
-print(my_features_acronym)
 
-target = 0
-for i in range(len(training.columns)):
-    if training.columns[i] == "target":
-        target = i
+# load data
 
-Y_train = training.values[:, target].astype(int)
+(X_train,
+ X_test,
+ Y_train,
+ my_features_index,
+ my_features_dic) = load_data(my_features_string)
 
-del training["target"]
-
-for i in range(len(training.columns)):
-    if training.columns[i] in my_features_string:
-        my_features_dic.update({i: training.columns[i]})
-        my_features_index.append(i)
-
-# separating features and labels
-training_val = training.values
-testing_val = testing.values
-X_train = training_val[:, my_features_index].astype(float)
-X_test = testing_val[:, my_features_index]
-del training_val
-del testing_val
-
-print(training.head())
-print(testing.head())
-
+# print user info
 now = datetime.datetime.now()
 print("date: " + str(now))
 print("features: " + str(my_features_string))
@@ -103,12 +76,14 @@ print("parameters:")
 print(parameters)
 print("cross validation:")
 
+# instantiate Kfold and predictions placeholder
 k = 5
 kf = KFold(k)
 predictions = np.zeros((X_test.shape[0], k))
 predictions_train = np.zeros(X_train.shape[0])
 i = 0
 
+# for each fold store predictions on test set and print validation results
 results = []
 print('Start training...')
 for train_index, test_index in kf.split(X_train):

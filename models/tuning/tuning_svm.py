@@ -1,26 +1,17 @@
 import time
 
-import pandas as pd
-from sklearn.svm import SVC
 from sklearn.model_selection import StratifiedKFold
+from sklearn.svm import SVC
 from skopt import gp_minimize
 
-from models.tools import f1_score
+from models.tools import f1_score, load_data
 from models.tuning.objective_function import ObjectiveFunction
 
 # path
 path_to_data = "data/"
 path_to_plots = "models/tuning/plots/"
 
-# load data
-training = pd.read_csv(path_to_data + "training_features.txt")
-testing = pd.read_csv(path_to_data + "testing_features.txt")
-del training["my_index"]
-del testing["my_index"]
-
-# replace inf in shortest_path with -1
-training['shortest_path'] = training['shortest_path'].replace([float('inf')], [-1])
-testing['shortest_path'] = testing['shortest_path'].replace([float('inf')], [-1])
+# used features
 
 my_features_string = [
     "overlap_title",
@@ -38,22 +29,14 @@ my_features_string = [
     "in_neighbors",
     "common_neighbors"
 ]
-my_features_index = []
-my_features_dic = {}
 
-target = 0
-for i in range(len(training.columns)):
-    if training.columns[i] == "target":
-        target = i
-    elif training.columns[i] in my_features_string:
-        my_features_dic.update({len(my_features_index): training.columns[i]})
-        my_features_index.append(i)
+# load data
 
-# separating features and labels
-training_val = training.values
-testing_val = testing.values
-X_train, Y_train = training_val[:, my_features_index].astype(float), training_val[:, target].astype(int)
-X_test = testing_val[:, my_features_index]
+(X_train,
+ X_test,
+ Y_train,
+ my_features_index,
+ my_features_dic) = load_data(my_features_string)
 
 
 # function to optimize (too costly --> feature selection, subsampling)
@@ -86,10 +69,8 @@ def objective_svm(x):
 # Bayesian Optimization (too costly --> feature selection, subsampling)
 f_bo = ObjectiveFunction(objective_svm)
 t0 = time.time()
-res = gp_minimize(f_bo, [(10**(-9), 10), (10**(-9), 0.1)], n_jobs=4)
+res = gp_minimize(f_bo, [(10 ** (-9), 10), (10 ** (-9), 0.1)], n_jobs=4)
 t1 = time.time()
 print("The total time with BO is : " + str(t1 - t0) + " seconds")
 print('best score BO :', -res.fun)
 print('best parameters BO:', res.x)
-
-

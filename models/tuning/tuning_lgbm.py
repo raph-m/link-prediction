@@ -1,8 +1,9 @@
 import warnings
+
 from lightgbm import LGBMClassifier
 from sklearn.model_selection import GridSearchCV
-import pandas as pd
 
+from models.tools import load_data
 from models.tuning.tools import plot_grid
 
 # deactivate deprecation warnings
@@ -16,16 +17,7 @@ path_to_submissions = "submissions/"
 path_to_stacking = "stacking/"
 path_to_plots = "plots/"
 
-
-# load data
-training = pd.read_csv(path_to_data + "training_features.txt")
-testing = pd.read_csv(path_to_data + "testing_features.txt")
-
-del training["my_index"]
-
-# replace inf in shortest_path with -1
-training['shortest_path'] = training['shortest_path'].replace([float('inf')], [-1])
-testing['shortest_path'] = testing['shortest_path'].replace([float('inf')], [-1])
+# used features
 
 my_features_string = [
     "date_diff",
@@ -54,29 +46,13 @@ my_features_string = [
     # # "katz_2"
 ]
 
-my_features_index = []
-my_features_dic = {}
-my_features_acronym = ["_".join(list(map(lambda x: x[0], string.split('_')))) for string in my_features_string]
+# load data
 
-target = 0
-for i in range(len(training.columns)):
-    if training.columns[i] == "target":
-        target = i
-
-Y_train = training.values[:, target].astype(int)
-
-del training["target"]
-
-for i in range(len(training.columns)):
-    if training.columns[i] in my_features_string:
-        my_features_dic.update({i: training.columns[i]})
-        my_features_index.append(i)
-# separating features and labels
-training_val = training.values
-testing_val = testing.values
-X_train = training_val[:, my_features_index].astype(float)
-X_test = testing_val[:, my_features_index]
-
+(X_train,
+ X_test,
+ Y_train,
+ my_features_index,
+ my_features_dic) = load_data(my_features_string)
 
 # GridSearchCV
 
@@ -119,4 +95,3 @@ plot_grid(metrics=results,
           index=index,
           param_names=list(tuned_parameters),
           name="grid_lgbm")
-
