@@ -35,37 +35,31 @@ print(X_train.head(), X_test.head())
 X_train = X_train.values
 X_test = X_test.values
 
-# model
-model = RandomForestClassifier(
-    criterion = 'entropy',
-    n_estimators=100,
-    min_samples_leaf=6,
-    max_depth=7,
+# GridSearchCV
+
+# param grid
+
+tuned_parameters = {
+    "n_estimators": [100],
+    "max_depth": [3, 7, 10],
+    "min_samples_leaf": [6],
+    "criterion" : ["entropy"]
+}
+
+# tuning
+rf = RandomForestClassifier(
     bootstrap=True,
     n_jobs=-1
 )
 
-
-# cross validated predictions
-k = 5
-kf = StratifiedKFold(k)
-predictions = np.zeros((X_test.shape[0], k))
-i = 0
-
-for train_index, test_index in kf.split(X_train, Y_train):
-    model.fit(X_train[train_index], Y_train[train_index])
-    Y_pred = model.predict(X_train[test_index])
-    Y_pred_train = model.predict(X_train[train_index])
-    predictions[:, i] = model.predict(X_test)
-    print("train: "+str(f1_score(Y_train[train_index], Y_pred_train)))
-    print("test: "+str(f1_score(Y_train[test_index], Y_pred)))
-    i += 1
-
-Y_test = (np.sum(predictions, axis=1) > 2.5).astype(int)
-submission = pd.DataFrame(Y_test)
-submission.to_csv(
-    path_or_buf=path_to_submissions + "stack_sub_rf.csv",
-    index=True,
-    index_label="id",
-    header=["category"]
-)
+metrics = ["f1"]
+grid_RF = GridSearchCV(rf,
+                       param_grid=tuned_parameters,
+                       scoring=metrics,
+                       refit='f1',
+                       cv=4,
+                       n_jobs=-1,
+                       verbose=10
+                       )
+grid_RF.fit(X_train, Y_train)
+print("GridSearch best parameters", grid_RF.best_params_)

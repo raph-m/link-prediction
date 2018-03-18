@@ -3,6 +3,8 @@ from lightgbm import LGBMClassifier
 from sklearn.model_selection import GridSearchCV
 import pandas as pd
 
+from models.tuning.tools import plot_grid
+
 # deactivate deprecation warnings
 warnings.simplefilter("ignore", DeprecationWarning)
 
@@ -30,22 +32,28 @@ my_features_string = [
     "overlap_title",
     "common_author",
     "score_1_2",
-    # "score_2_1",
-    # "cosine_distance",
-    # "journal_similarity",
-    # "overlapping_words_abstract",
-    # "jaccard",
+    "score_2_1",
+    "cosine_distance",
+    "journal_similarity",
+    "overlapping_words_abstract",
+    "jaccard",
     "adar",
-    # "preferential_attachment",
-    # "resource_allocation_index",
-    # "out_neighbors",
-    # "in_neighbors",
-    # "common_neighbors",
+    "preferential_attachment",
+    "resource_allocation_index",
+    "out_neighbors",
+    "in_neighbors",
+    "common_neighbors",
     # "shortest_path",
-    # "popularity",
-    # "katz"
-    # "katz_2"
+    "popularity",
+    "common_successors",
+    "common_predecessors",
+    # "paths_of_length_one",
+    "authors_citation"
+    "coauthor_score"
+    # # "katz"
+    # # "katz_2"
 ]
+
 my_features_index = []
 my_features_dic = {}
 my_features_acronym = ["_".join(list(map(lambda x: x[0], string.split('_')))) for string in my_features_string]
@@ -101,3 +109,14 @@ grid_lgbm = GridSearchCV(gbm,
                          )
 grid_lgbm.fit(X_train, Y_train, verbose=-1)
 print("GridSearch best parameters", grid_lgbm.best_params_)
+
+# plot grid search results
+best_params = grid_lgbm.best_params_
+results = grid_lgbm.cv_results_
+index = grid_lgbm.best_index_
+plot_grid(metrics=results,
+          params=tuned_parameters,
+          index=index,
+          param_names=list(tuned_parameters),
+          name="grid_lgbm")
+

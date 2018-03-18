@@ -23,21 +23,32 @@ training['shortest_path'] = training['shortest_path'].replace([float('inf')], [-
 testing['shortest_path'] = testing['shortest_path'].replace([float('inf')], [-1])
 
 my_features_string = [
-    "overlap_title",
     "date_diff",
+    # "overlap_title",
     "common_author",
-    "journal_similarity",
-    "overlapping_words_abstract",
+    # # "score_1_2",
+    # # "score_2_1",
     "cosine_distance",
-    "shortest_path",
-    "jaccard",
-    "adar",
+    # "journal_similarity",
+    # # "overlapping_words_abstract",
+    # # "jaccard",
+    # # "adar",
     "preferential_attachment",
-    "resource_allocation_index",
-    "out_neighbors",
+    # # "resource_allocation_index",
+    # "out_neighbors",
     "in_neighbors",
-    "common_neighbors"
+    "common_neighbors",
+    # "shortest_path",
+    # "popularity",
+    # "common_successors",
+    # "common_predecessors",
+    # "paths_of_length_one",
+    "authors_citation"
+    # "coauthor_score"
+    # # "katz"
+    # # "katz_2"
 ]
+
 my_features_index = []
 my_features_dic = {}
 

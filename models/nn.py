@@ -59,6 +59,8 @@ my_features_string = [
     "common_neighbors",
     # "shortest_path",
     "popularity",
+    "authors_citation",
+    "coauthor_score"
     # "paths_of_length_one"
     # "katz"
     # "katz_2"

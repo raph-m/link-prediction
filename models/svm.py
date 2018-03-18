@@ -1,7 +1,8 @@
-from sklearn import svm
 import datetime
+
 import numpy as np
 import pandas as pd
+from sklearn import svm
 from sklearn.model_selection import StratifiedKFold
 from sklearn.preprocessing import StandardScaler
 
@@ -16,6 +17,7 @@ path_to_plots = "models/plots"
 # load data
 training = pd.read_csv(path_to_data + "training_features.txt")
 testing = pd.read_csv(path_to_data + "testing_features.txt")
+
 del training["my_index"]
 del testing["my_index"]
 
@@ -54,15 +56,26 @@ target = 0
 for i in range(len(training.columns)):
     if training.columns[i] == "target":
         target = i
-    elif training.columns[i] in my_features_string:
-        my_features_dic.update({len(my_features_index): training.columns[i]})
+
+Y_train = training.values[:, target].astype(int)
+
+del training["target"]
+
+for i in range(len(training.columns)):
+    if training.columns[i] in my_features_string:
+        my_features_dic.update({i: training.columns[i]})
         my_features_index.append(i)
 
 # separating features and labels
 training_val = training.values
 testing_val = testing.values
-X_train, Y_train = training_val[:, my_features_index].astype(float), training_val[:, target].astype(int)
+X_train = training_val[:, my_features_index].astype(float)
 X_test = testing_val[:, my_features_index]
+del training_val
+del testing_val
+
+print(training.head())
+print(testing.head())
 
 # normalize data
 scaler = StandardScaler()

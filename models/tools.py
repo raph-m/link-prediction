@@ -1,5 +1,8 @@
 import numpy as np
 import pandas as pd
+import matplotlib as mpl
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 
 def binary_error(preds, train_data):
@@ -42,21 +45,80 @@ def load_data(my_features_string):
     training = pd.read_csv(path_to_data + "training_features.txt")
     testing = pd.read_csv(path_to_data + "testing_features.txt")
 
+    del training["my_index"]
+    del testing["my_index"]
+
     # track features and target
     target = 0
     for i in range(len(training.columns)):
         if training.columns[i] == "target":
             target = i
-        elif training.columns[i] in my_features_string:
+
+    Y_train = training.values[:, target].astype(int)
+
+    del training["target"]
+
+    for i in range(len(training.columns)):
+        if training.columns[i] in my_features_string:
+            my_features_dic.update({i: training.columns[i]})
             my_features_index.append(i)
-            my_features_dic.update({len(my_features_index): training.columns[i]})
 
     # separating features and labels
     training_val = training.values
     testing_val = testing.values
-    X_train, Y_train = training_val[:, my_features_index].astype(float), training_val[:, target].astype(int)
+    X_train = training_val[:, my_features_index].astype(float)
     X_test = testing_val[:, my_features_index]
 
+    del training_val
+    del testing_val
+
+    print(training.head())
+    print(testing.head())
+
     return X_train, X_test, Y_train, my_features_index, my_features_dic
+
+
+# plotting feature importances
+def plot_importance(rf, features_dict, features_index, name):
+    # plot settings
+    sns.set_style("darkgrid")
+    mpl.rcParams['figure.dpi'] = 200
+    # mpl.rcParams['figure.tight_layout'] = True
+    path_to_plot = "models/plots/"
+
+    # fetch mean importances
+    importances = rf.feature_importances_
+    # compute std using each estimator in the forest
+    std = np.std([tree.feature_importances_ for tree in rf.estimators_],
+                 axis=0)
+    # argsort the values
+    index = list(map(int, np.argsort(importances)[::-1]))
+    # Plot the feature importances of the rf
+    plt.figure()
+    # get axis
+    fig, ax = plt.subplots(figsize=(6, 3))
+    # add space for x labels
+    plt.subplots_adjust(bottom=0.30)
+    plt.title("Feature importances")
+    # get number of features
+    nb_features = len(features_dict)
+    # plot with error bars
+    plt.bar(range(nb_features), importances[index],
+            color="r", yerr=std[index], align="center")
+    # create x axis tickers
+    plt.xticks(range(nb_features), index)
+    # get feature names in right order
+    index_features_sorted = np.array(features_index)[index]
+    feature_names = list(map(lambda x: features_dict[x], index_features_sorted))
+    # font dict to control x tickers labels
+    ax.set_xticklabels(feature_names, rotation=40, fontsize=9, ha='right')
+    plt.xlim([-1, nb_features])
+    plt.ylim([0, 0.8])
+    plt.savefig(path_to_plot + name)
+    plt.show()
+
+
+
+
 
 
