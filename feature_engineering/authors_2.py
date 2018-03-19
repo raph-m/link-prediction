@@ -39,7 +39,7 @@ coauthors = nx.Graph()
 
 print("building coauthor graph")
 nodes_id = nodes.index.values
-for i in range(len(nodes_id)):
+for i in tqdm(range(len(nodes_id))):
 
     authors = nodes.loc[nodes_id[i]]["authors"]
     if authors is np.nan:
@@ -63,9 +63,7 @@ id1 = training["id1"].values
 id2 = training["id2"].values
 
 print("building citation graph")
-for i in range(len(id1)):
-    if i % 100000 == 0:
-        print(i)
+for i in tqdm(range(len(id1))):
 
     current_authors_1 = nodes.loc[id1[i]]["authors"]
     current_authors_2 = nodes.loc[id2[i]]["authors"]
@@ -93,10 +91,7 @@ best_authors_in_neighbors = np.zeros(len(id1))
 authors_common_neighbors = np.zeros(len(id1))
 
 print("building features for training")
-for i in range(len(id1)):
-    if i % 1000 == 0:
-        print(i)
-        print(time.time())
+for i in tqdm(range(len(id1))):
     current_authors_1 = nodes.loc[id1[i]]["authors"]
     current_authors_2 = nodes.loc[id2[i]]["authors"]
 
@@ -154,9 +149,7 @@ best_authors_in_neighbors = np.zeros(len(id1))
 authors_common_neighbors = np.zeros(len(id1))
 
 print("building features for testing")
-for i in range(len(id1)):
-    if i % 100000 == 0:
-        print(i)
+for i in tqdm(range(len(id1))):
     current_authors_1 = nodes.loc[id1[i]]["authors"]
     current_authors_2 = nodes.loc[id2[i]]["authors"]
 
