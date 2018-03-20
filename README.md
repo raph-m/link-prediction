@@ -1,6 +1,8 @@
 # link-prediction
 
 Predict links in a citation network.
+You can find the project instructions in the ressources folder.
+Our project report is available in the link-prediction-report pdf.
 
 ## Feature Engineering
 
