@@ -28,16 +28,7 @@ parameters = {
     "n_jobs": -1
 }
 
-# load data
-training = pd.read_csv(path_to_data + "training_features.txt")
-testing = pd.read_csv(path_to_data + "testing_features.txt")
-
-del training["my_index"]
-del testing["my_index"]
-
-# replace inf in shortest_path with -1
-training['shortest_path'] = training['shortest_path'].replace([float('inf')], [-1])
-testing['shortest_path'] = testing['shortest_path'].replace([float('inf')], [-1])
+# features used
 
 my_features_string = [
     "date_diff",
